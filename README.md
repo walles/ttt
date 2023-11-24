@@ -34,6 +34,9 @@ Hone your multiplication skills!
   * When the user passes something, deduct one needs-practice points
   * Try to take every other question from the needs-practice table if there's
     something in there
+* Based on the system language, support both Swedish and English
+* Adapt to the system's theme (dark / light)
+* Make the home screen look sensible on different resolutions
 
 ---
 

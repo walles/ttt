@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const TttApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class TttApp extends StatelessWidget {
+  const TttApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -24,13 +24,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Timed Times Tables'),
+      home: const TttHomeScreen(title: 'Timed Times Tables'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class TttHomeScreen extends StatefulWidget {
+  const TttHomeScreen({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -44,10 +44,10 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<TttHomeScreen> createState() => _TttHomeScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _TttHomeScreenState extends State<TttHomeScreen> {
   int _counter = 0;
 
   void _incrementCounter() {
