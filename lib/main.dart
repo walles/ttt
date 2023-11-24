@@ -100,7 +100,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             const ElevatedButton(onPressed: null, child: Text("Start!"))
           ],
