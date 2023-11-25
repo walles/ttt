@@ -2,17 +2,20 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ttt/stats.dart';
 
 class _GameState extends State<Game> {
   int _questionNumberOneBased = 0;
   String _question = "";
   String _answer = "";
 
+  final DateTime _startTime = DateTime.now();
+
   void _nextQuestion() {
     setState(() {
       _questionNumberOneBased++;
       if (_questionNumberOneBased > 10) {
-        widget.onDone();
+        widget.onDone(Stats(duration: DateTime.now().difference(_startTime)));
       }
       _generateQuestion();
     });
@@ -36,7 +39,7 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _controller = TextEditingController();
+    TextEditingController controller = TextEditingController();
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -49,7 +52,7 @@ class _GameState extends State<Game> {
             SizedBox(
               width: 100,
               child: TextField(
-                  controller: _controller,
+                  controller: controller,
                   autofocus: true,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
@@ -57,11 +60,11 @@ class _GameState extends State<Game> {
                   ),
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(2)
+                    LengthLimitingTextInputFormatter("100".length),
                   ],
                   onChanged: (text) {
                     if (text == _answer) {
-                      _controller.clear();
+                      controller.clear();
                       _nextQuestion();
                     }
                   }),
@@ -76,7 +79,7 @@ class _GameState extends State<Game> {
 class Game extends StatefulWidget {
   const Game({super.key, required this.onDone});
 
-  final Function onDone;
+  final Function(Stats stats) onDone;
 
   @override
   State<Game> createState() => _GameState();

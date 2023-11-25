@@ -4,13 +4,11 @@ Hone your multiplication skills!
 
 ## TODO
 
-### Make it playable for Johan
-
-* Present the result on the start screen, with time and number of
-  right-on-the-first-attempt answers
-
 ### Make it playable for others
 
+* Present the result on the start screen, with:
+  * DONE: time
+  * number of right-on-the-first-attempt answers
 * If the right answer hasn't been presented in five seconds, show the correct
   answer so that the player can type it
 * Auto deploy to GitHub Pages on each push to the `main` branch
@@ -29,6 +27,7 @@ Hone your multiplication skills!
 ### Random improvements
 
 * Make an icon
+* Make the start screen look better when displaying stats
 * Enable picking which multiplication tables to test
 * Enable choosing between multiplication, division and both
 * Enable setting the number of questions

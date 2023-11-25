@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ttt/game.dart';
+import 'package:ttt/stats.dart';
 
 void main() {
   runApp(const TttApp());
@@ -57,30 +58,36 @@ class TttHomeScreen extends StatefulWidget {
 
 class _TttHomeScreenState extends State<TttHomeScreen> {
   bool _running = false;
+  Stats? _stats;
 
   Widget _startScreen() {
+    List<Widget> children = [];
+    if (_stats != null) {
+      children
+          .add(Text("You finished in ${_stats!.duration.inSeconds} seconds."));
+    }
+    children.add(ElevatedButton(
+        onPressed: () {
+          setState(() {
+            _running = true;
+          });
+        },
+        child: const Text("Start!")));
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text("Press the button below to start."),
-        ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _running = true;
-              });
-            },
-            child: const Text("Start!"))
-      ],
+      children: children,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    var child;
+    Widget child;
     if (_running) {
-      child = Game(onDone: () {
+      child = Game(onDone: (Stats stats) {
         setState(() {
           _running = false;
+          _stats = stats;
         });
       });
     } else {
