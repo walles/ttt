@@ -6,9 +6,6 @@ Hone your multiplication skills!
 
 ### Make it playable for others
 
-* Present the result on the start screen, with:
-  * DONE: time
-  * number of right-on-the-first-attempt answers
 * If the right answer hasn't been presented in five seconds, show the correct
   answer so that the player can type it
 * Auto deploy to GitHub Pages on each push to the `main` branch
@@ -27,6 +24,7 @@ Hone your multiplication skills!
 ### Random improvements
 
 * Make an icon
+* Replace the 1/10 thing during the game with a progress bar
 * Make the start screen look better when displaying stats
 * Enable picking which multiplication tables to test
 * Enable choosing between multiplication, division and both
@@ -55,6 +53,9 @@ Hone your multiplication skills!
 * Add a text field for answer to the question
 * Skip to the next question as soon as the text field contains the right answer
 * After 10 questions, go back to the start screen
+* Present the result on the start screen, with:
+  * time
+  * number of right-on-the-first-attempt answers
 
 ---
 

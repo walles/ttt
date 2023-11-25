@@ -65,6 +65,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     if (_stats != null) {
       children
           .add(Text("You finished in ${_stats!.duration.inSeconds} seconds."));
+      children.add(Text(
+          "You got ${_stats!.rightOnFirstAttempt}/10 right on the first attempt."));
     }
     children.add(ElevatedButton(
         onPressed: () {

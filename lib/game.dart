@@ -5,17 +5,29 @@ import 'package:flutter/services.dart';
 import 'package:ttt/stats.dart';
 
 class _GameState extends State<Game> {
+  // Game state
   int _questionNumberOneBased = 0;
-  String _question = "";
-  String _answer = "";
+  late String _question;
+  late String _answer;
+  late bool _currentHasBeenWrong;
+  int _rightOnFirstAttempt = 0;
 
+  // Stats state
   final DateTime _startTime = DateTime.now();
+
+  final TextEditingController _controller = TextEditingController();
 
   void _nextQuestion() {
     setState(() {
+      if (!_currentHasBeenWrong) {
+        _rightOnFirstAttempt++;
+      }
+
       _questionNumberOneBased++;
       if (_questionNumberOneBased > 10) {
-        widget.onDone(Stats(duration: DateTime.now().difference(_startTime)));
+        widget.onDone(Stats(
+            duration: DateTime.now().difference(_startTime),
+            rightOnFirstAttempt: _rightOnFirstAttempt));
       }
       _generateQuestion();
     });
@@ -27,6 +39,7 @@ class _GameState extends State<Game> {
     setState(() {
       _question = "$a×$b=";
       _answer = (a * b).toString();
+      _currentHasBeenWrong = false;
     });
   }
 
@@ -39,7 +52,6 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller = TextEditingController();
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -52,7 +64,7 @@ class _GameState extends State<Game> {
             SizedBox(
               width: 100,
               child: TextField(
-                  controller: controller,
+                  controller: _controller,
                   autofocus: true,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
@@ -64,8 +76,14 @@ class _GameState extends State<Game> {
                   ],
                   onChanged: (text) {
                     if (text == _answer) {
-                      controller.clear();
+                      _controller.clear();
                       _nextQuestion();
+                      return;
+                    }
+                    if (!_answer.startsWith(text)) {
+                      setState(() {
+                        _currentHasBeenWrong = true;
+                      });
                     }
                   }),
             ),
