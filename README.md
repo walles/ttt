@@ -22,7 +22,9 @@ Hone your multiplication skills!
 * Show the Git SHA
 * Test on desktop
 * Test on Android
+* Test on Android in landscape mode
 * Test in a small browser window on desktop
+* I18N and L10N into Swedish, follow the system language
 
 ### Random improvements
 

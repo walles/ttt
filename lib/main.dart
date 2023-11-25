@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ttt/game.dart';
 
 void main() {
   runApp(const TttApp());
@@ -66,18 +67,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   Widget _startScreen() {
     return Column(
       children: [
-        const Text("Welcome to Timed Times Tables!"),
         const Text("Press the button below to start."),
         ElevatedButton(onPressed: _toggleRunning, child: const Text("Start!"))
-      ],
-    );
-  }
-
-  Widget _runningScreen() {
-    return Column(
-      children: [
-        const Text("Running!"),
-        ElevatedButton(onPressed: _toggleRunning, child: const Text("Stop!"))
       ],
     );
   }
@@ -86,7 +77,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   Widget build(BuildContext context) {
     var child;
     if (_running) {
-      child = _runningScreen();
+      child = Game();
     } else {
       child = _startScreen();
     }
