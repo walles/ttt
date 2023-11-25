@@ -73,24 +73,24 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     );
   }
 
+  Widget _runningScreen() {
+    return Column(
+      children: [
+        const Text("Running!"),
+        ElevatedButton(onPressed: _toggleRunning, child: const Text("Stop!"))
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    var child = _startScreen();
+    var child;
     if (_running) {
-      child = Column(
-        children: [
-          const Text("Running!"),
-          ElevatedButton(onPressed: _toggleRunning, child: const Text("Stop!"))
-        ],
-      );
+      child = _runningScreen();
+    } else {
+      child = _startScreen();
     }
 
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
