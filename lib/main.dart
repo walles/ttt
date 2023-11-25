@@ -12,7 +12,7 @@ class TttApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Timed Times Tables', // FIXME: Get this from some Metadata file
+      title: 'Timed Times Tables', // FIXME: Get this from some metadata file
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -60,6 +60,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
 
   Widget _startScreen() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text("Press the button below to start."),
         ElevatedButton(
