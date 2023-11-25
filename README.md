@@ -6,9 +6,8 @@ Hone your multiplication skills!
 
 ### Make it playable for Johan
 
-* Add a text field for answer to the question
-* Skip to the next question as soon as the text field contains the right answer
-* Go back to the start screen and present the result there
+* Present the result on the start screen, with time and number of
+  right-on-the-first-attempt answers
 
 ### Make it playable for others
 
@@ -54,6 +53,9 @@ Hone your multiplication skills!
 * Make a home screen
 * Add a Start button to the home screen
 * Ask ten random multiplication / division questions
+* Add a text field for answer to the question
+* Skip to the next question as soon as the text field contains the right answer
+* After 10 questions, go back to the start screen
 
 ---
 
