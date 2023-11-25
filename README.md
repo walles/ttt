@@ -6,7 +6,8 @@ Hone your multiplication skills!
 
 ### Make it playable for Johan
 
-* Ask ten random multiplication / division questions
+* Add a text field for answer to the question
+* Skip to the next question as soon as the text field contains the right answer
 * Go back to the start screen and present the result there
 
 ### Make it playable for others
@@ -52,6 +53,7 @@ Hone your multiplication skills!
 
 * Make a home screen
 * Add a Start button to the home screen
+* Ask ten random multiplication / division questions
 
 ---
 
