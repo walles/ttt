@@ -58,17 +58,17 @@ class TttHomeScreen extends StatefulWidget {
 class _TttHomeScreenState extends State<TttHomeScreen> {
   bool _running = false;
 
-  void _toggleRunning() {
-    setState(() {
-      _running = !_running;
-    });
-  }
-
   Widget _startScreen() {
     return Column(
       children: [
         const Text("Press the button below to start."),
-        ElevatedButton(onPressed: _toggleRunning, child: const Text("Start!"))
+        ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _running = true;
+              });
+            },
+            child: const Text("Start!"))
       ],
     );
   }
@@ -77,7 +77,11 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   Widget build(BuildContext context) {
     var child;
     if (_running) {
-      child = Game();
+      child = Game(onDone: () {
+        setState(() {
+          _running = false;
+        });
+      });
     } else {
       child = _startScreen();
     }

@@ -7,7 +7,7 @@ class _GameState extends State<Game> {
     setState(() {
       _questionNumberZeroBased++;
       if (_questionNumberZeroBased >= 10) {
-        FIXME: Tell our parent we're done
+        widget.onDone();
       }
     });
   }
@@ -20,14 +20,17 @@ class _GameState extends State<Game> {
         Text(
           'Question number (0 based): $_questionNumberZeroBased',
         ),
-        ElevatedButton(onPressed: _nextQuestion, child: const Text("Start!")),
+        ElevatedButton(
+            onPressed: _nextQuestion, child: const Text("Next Question")),
       ],
     );
   }
 }
 
 class Game extends StatefulWidget {
-  const Game({Key? key}) : super(key: key);
+  const Game({super.key, required this.onDone});
+
+  final Function onDone;
 
   @override
   State<Game> createState() => _GameState();
