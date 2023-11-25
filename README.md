@@ -6,8 +6,6 @@ Hone your multiplication skills!
 
 ### Make it playable for Johan
 
-* Make a home screen
-* Add a Start button to the home screen
 * Ask ten random multiplication / division questions
 * Go back to the start screen and present the result there
 
@@ -15,6 +13,16 @@ Hone your multiplication skills!
 
 * If the right answer hasn't been presented in five seconds, show the correct
   answer so that the player can type it
+* Auto deploy to GitHub Pages on each push to the `main` branch
+
+### Make it publishable to everyone
+
+* Add a license
+* Add contact information, both to GitHub Issues and via email
+* Show the Git SHA
+* Test on desktop
+* Test on Android
+* Test in a small browser window on desktop
 
 ### Random improvements
 
@@ -37,6 +45,11 @@ Hone your multiplication skills!
 * Based on the system language, support both Swedish and English
 * Adapt to the system's theme (dark / light)
 * Make the home screen look sensible on different resolutions
+
+### Done
+
+* Make a home screen
+* Add a Start button to the home screen
 
 ---
 
