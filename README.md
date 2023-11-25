@@ -8,7 +8,6 @@ Hone your multiplication skills!
 
 * If the right answer hasn't been presented in five seconds, show the correct
   answer so that the player can type it
-* Auto deploy to GitHub Pages on each push to the `main` branch
 
 ### Make it publishable to everyone
 
@@ -56,6 +55,7 @@ Hone your multiplication skills!
 * Present the result on the start screen, with:
   * time
   * number of right-on-the-first-attempt answers
+* Auto deploy to GitHub Pages on each push to the `main` branch
 
 ---
 
