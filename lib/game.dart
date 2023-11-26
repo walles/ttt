@@ -52,6 +52,19 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
+    InputDecoration inputDecoration;
+    if (_currentHasBeenWrong) {
+      inputDecoration = const InputDecoration(
+        border: OutlineInputBorder(),
+        filled: true,
+        fillColor: Colors.red,
+      );
+    } else {
+      inputDecoration = const InputDecoration(
+        border: OutlineInputBorder(),
+      );
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -67,9 +80,7 @@ class _GameState extends State<Game> {
                   controller: _controller,
                   autofocus: true,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: inputDecoration,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter("100".length),

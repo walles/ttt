@@ -8,6 +8,8 @@ Hone your multiplication skills!
 
 * If the right answer hasn't been presented in five seconds, show the correct
   answer so that the player can type it
+* Replace the "3/10" text with a progress bar under the line where the user
+  types
 
 ### Make it publishable to everyone
 
@@ -23,6 +25,7 @@ Hone your multiplication skills!
 ### Random improvements
 
 * Make an icon
+* Add sound effects. Steal from Numbervaders perhaps?
 * Replace the 1/10 thing during the game with a progress bar
 * Make the start screen look better when displaying stats
 * Enable picking which multiplication tables to test
