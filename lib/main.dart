@@ -82,13 +82,15 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         child: const Text("Start!")));
 
     // Add a list widget with numbers 2-10
-    children.add(TablesSelectorWidget(
-        initialSelection: _requestedTables,
-        onSelectionChanged: (Set<int> tables) {
-          setState(() {
-            _requestedTables = tables;
-          });
-        }));
+    children.add(Expanded(
+      child: TablesSelectorWidget(
+          initialSelection: _requestedTables,
+          onSelectionChanged: (Set<int> tables) {
+            setState(() {
+              _requestedTables = tables;
+            });
+          }),
+    ));
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
