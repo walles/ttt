@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,9 @@ class _GameState extends State<Game> {
   late String _answer;
   late bool _currentHasBeenWrong;
   int _rightOnFirstAttempt = 0;
+
+  bool _tooSlow = false;
+  Timer? _tooSlowTimer;
 
   // Stats state
   final DateTime _startTime = DateTime.now();
@@ -33,13 +37,30 @@ class _GameState extends State<Game> {
     });
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    _tooSlowTimer?.cancel();
+    super.dispose();
+  }
+
   void _generateQuestion() {
     var a = Random().nextInt(9) + 2;
     var b = Random().nextInt(9) + 2;
+
     setState(() {
       _question = "$a×$b=";
       _answer = (a * b).toString();
       _currentHasBeenWrong = false;
+
+      _tooSlowTimer?.cancel();
+
+      _tooSlow = false;
+      _tooSlowTimer = Timer(const Duration(seconds: 5), () {
+        setState(() {
+          _tooSlow = true;
+        });
+      });
     });
   }
 
@@ -52,16 +73,20 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
+    String? hintText = _tooSlow ? _answer : null;
+
     InputDecoration inputDecoration;
     if (_currentHasBeenWrong) {
-      inputDecoration = const InputDecoration(
-        border: OutlineInputBorder(),
+      inputDecoration = InputDecoration(
+        border: const OutlineInputBorder(),
         filled: true,
         fillColor: Colors.red,
+        suffixText: hintText,
       );
     } else {
-      inputDecoration = const InputDecoration(
-        border: OutlineInputBorder(),
+      inputDecoration = InputDecoration(
+        border: const OutlineInputBorder(),
+        suffixText: hintText,
       );
     }
 

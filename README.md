@@ -6,8 +6,6 @@ Hone your multiplication skills!
 
 ### Make it playable for others
 
-* If the right answer hasn't been presented in five seconds, show the correct
-  answer so that the player can type it
 * Enable picking which multiplication tables to test
 * Give the user 30s rather than 10 questions. Let the user finish the last
   question when the time runs out. For stats, show the user's speed in seconds
@@ -60,6 +58,8 @@ Hone your multiplication skills!
 * Auto deploy to GitHub Pages on each push to the `main` branch
 * Replace the "3/10" text with a progress bar under the line where the user
   types
+* If the right answer hasn't been presented in five seconds, show the correct
+  answer so that the player can type it
 
 ---
 
