@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ttt/config.dart';
 import 'package:ttt/game.dart';
 import 'package:ttt/stats.dart';
+import 'package:ttt/tables_selector_widget.dart';
 
 void main() {
   runApp(const TttApp());
@@ -61,6 +62,9 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   bool _running = false;
   Stats? _stats;
 
+  /// The tables the user wants to practice.
+  Set<int> _requestedTables = {2, 3, 4, 5, 6, 7, 8, 9, 10};
+
   Widget _startScreen() {
     List<Widget> children = [];
     if (_stats != null) {
@@ -76,6 +80,15 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
           });
         },
         child: const Text("Start!")));
+
+    // Add a list widget with numbers 2-10
+    children.add(TablesSelectorWidget(
+        initialSelection: _requestedTables,
+        onSelectionChanged: (Set<int> tables) {
+          setState(() {
+            _requestedTables = tables;
+          });
+        }));
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -94,17 +107,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
               _stats = stats;
             });
           },
-          config: Config({
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-          }));
+          config: Config(_requestedTables));
     } else {
       child = _startScreen();
     }
