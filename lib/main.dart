@@ -107,7 +107,14 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: child,
+        child: Container(
+          padding: const EdgeInsets.all(20.0),
+          constraints: const BoxConstraints(
+            maxWidth:
+                400, // FIXME: What is the unit here? How will this look on different devices?
+          ),
+          child: child,
+        ),
       ),
     );
   }

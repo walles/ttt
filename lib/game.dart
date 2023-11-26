@@ -72,7 +72,7 @@ class _GameState extends State<Game> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '$_questionNumberOneBased/10: $_question',
+              _question,
             ),
             SizedBox(
               width: 100,
@@ -99,6 +99,9 @@ class _GameState extends State<Game> {
                   }),
             ),
           ],
+        ),
+        LinearProgressIndicator(
+          value: (_questionNumberOneBased - 1) / 10,
         ),
       ],
     );

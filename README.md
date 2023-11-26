@@ -8,8 +8,10 @@ Hone your multiplication skills!
 
 * If the right answer hasn't been presented in five seconds, show the correct
   answer so that the player can type it
-* Replace the "3/10" text with a progress bar under the line where the user
-  types
+* Enable picking which multiplication tables to test
+* Give the user 30s rather than 10 questions. Let the user finish the last
+  question when the time runs out. For stats, show the user's speed in seconds
+  per question. Or questions per minute?
 
 ### Make it publishable to everyone
 
@@ -26,11 +28,8 @@ Hone your multiplication skills!
 
 * Make an icon
 * Add sound effects. Steal from Numbervaders perhaps?
-* Replace the 1/10 thing during the game with a progress bar
 * Make the start screen look better when displaying stats
-* Enable picking which multiplication tables to test
 * Enable choosing between multiplication, division and both
-* Enable setting the number of questions
 * Avoid doing the same question twice. Might be hard with 10 questions and one
   multiplication table, let's just do our best!
 * Collect high scores
@@ -59,6 +58,8 @@ Hone your multiplication skills!
   * time
   * number of right-on-the-first-attempt answers
 * Auto deploy to GitHub Pages on each push to the `main` branch
+* Replace the "3/10" text with a progress bar under the line where the user
+  types
 
 ---
 
