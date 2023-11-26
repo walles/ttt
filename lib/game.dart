@@ -46,8 +46,19 @@ class _GameState extends State<Game> {
   }
 
   void _generateQuestion() {
-    var a = Random().nextInt(9) + 2;
+    // Pick a random entry in the tables to test
+    var a = widget.config.tablesToTest
+        .elementAt(Random().nextInt(widget.config.tablesToTest.length));
+
+    // Pick a number to multiply with (2 to 10)
     var b = Random().nextInt(9) + 2;
+
+    if (Random().nextBool()) {
+      // Switch places between a and b
+      var tmp = a;
+      a = b;
+      b = tmp;
+    }
 
     setState(() {
       _question = "$a×$b=";
