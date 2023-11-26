@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ttt/config.dart';
 import 'package:ttt/stats.dart';
 
 class _GameState extends State<Game> {
@@ -134,9 +135,10 @@ class _GameState extends State<Game> {
 }
 
 class Game extends StatefulWidget {
-  const Game({super.key, required this.onDone});
+  const Game({super.key, required this.onDone, required this.config});
 
   final Function(Stats stats) onDone;
+  final Config config;
 
   @override
   State<Game> createState() => _GameState();

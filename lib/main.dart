@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ttt/config.dart';
 import 'package:ttt/game.dart';
 import 'package:ttt/stats.dart';
 
@@ -86,12 +87,24 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   Widget build(BuildContext context) {
     Widget child;
     if (_running) {
-      child = Game(onDone: (Stats stats) {
-        setState(() {
-          _running = false;
-          _stats = stats;
-        });
-      });
+      child = Game(
+          onDone: (Stats stats) {
+            setState(() {
+              _running = false;
+              _stats = stats;
+            });
+          },
+          config: Config({
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+          }));
     } else {
       child = _startScreen();
     }
