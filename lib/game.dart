@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ttt/config.dart';
 import 'package:ttt/stats.dart';
 
 class _GameState extends State<Game> {
@@ -45,8 +46,19 @@ class _GameState extends State<Game> {
   }
 
   void _generateQuestion() {
-    var a = Random().nextInt(9) + 2;
+    // Pick a random entry in the tables to test
+    var a = widget.config.tablesToTest
+        .elementAt(Random().nextInt(widget.config.tablesToTest.length));
+
+    // Pick a number to multiply with (2 to 10)
     var b = Random().nextInt(9) + 2;
+
+    if (Random().nextBool()) {
+      // Switch places between a and b
+      var tmp = a;
+      a = b;
+      b = tmp;
+    }
 
     setState(() {
       _question = "$a×$b=";
@@ -134,9 +146,10 @@ class _GameState extends State<Game> {
 }
 
 class Game extends StatefulWidget {
-  const Game({super.key, required this.onDone});
+  const Game({super.key, required this.onDone, required this.config});
 
   final Function(Stats stats) onDone;
+  final Config config;
 
   @override
   State<Game> createState() => _GameState();

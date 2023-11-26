@@ -4,13 +4,6 @@ Hone your multiplication skills!
 
 ## TODO
 
-### Make it playable for others
-
-* Enable picking which multiplication tables to test
-* Give the user 30s rather than 10 questions. Let the user finish the last
-  question when the time runs out. For stats, show the user's speed in seconds
-  per question. Or questions per minute?
-
 ### Make it publishable to everyone
 
 * Add a license
@@ -24,6 +17,11 @@ Hone your multiplication skills!
 
 ### Random improvements
 
+* Give the user 30s rather than 10 questions. Let the user finish the last
+  question when the time runs out. For stats, show the user's speed in seconds
+  per question. Or questions per minute?
+* Replace the tables selector list with a collection of toggle buttons, one for
+  each table. I think this might take less space and look nicer.
 * Make an icon
 * Add sound effects. Steal from Numbervaders perhaps?
 * Make the start screen look better when displaying stats
@@ -60,6 +58,7 @@ Hone your multiplication skills!
   types
 * If the right answer hasn't been presented in five seconds, show the correct
   answer so that the player can type it
+* Enable picking which multiplication tables to test
 
 ---
 
