@@ -2,6 +2,8 @@
 
 Hone your multiplication skills!
 
+Try here: <https://walles.github.io/ttt>
+
 ## TODO
 
 ### Make it publishable to everyone
