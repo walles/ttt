@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ttt/config.dart';
 import 'package:ttt/game.dart';
 import 'package:ttt/help_dialog.dart';
@@ -62,11 +63,15 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   Widget _startScreen() {
     List<Widget> children = [];
     if (_stats != null) {
+      // Note that we need to explicitly pass the locale to NumberFormat,
+      // otherwise we get "." decimal separators even in Swedish.
+      NumberFormat oneDecimal =
+          NumberFormat('#0.0', Localizations.localeOf(context).toString());
+
       double totalDurationSeconds = _stats!.duration.inMilliseconds / 1000.0;
-      String totalDuration = totalDurationSeconds.toStringAsFixed(1);
-      String perQuestionDuration =
-          (totalDurationSeconds / _stats!.rightOnFirstAttempt)
-              .toStringAsFixed(1);
+      String totalDuration = oneDecimal.format(totalDurationSeconds);
+      String perQuestionDuration = oneDecimal
+          .format((totalDurationSeconds / _stats!.rightOnFirstAttempt));
       String statsText = AppLocalizations.of(context)!.done_stats(
           _stats!.rightOnFirstAttempt, totalDuration, perQuestionDuration);
 
