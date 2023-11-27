@@ -90,9 +90,26 @@ class _GameState extends State<Game> {
       b = tmp;
     }
 
+    bool isMultiplication; // Else division
+    if (widget.config.multiplication && widget.config.division) {
+      isMultiplication = Random().nextBool();
+    } else {
+      isMultiplication = widget.config.multiplication;
+    }
+
+    String question;
+    String answer;
+    if (isMultiplication) {
+      question = "$a×$b=";
+      answer = (a * b).toString();
+    } else {
+      question = "${a * b}/$a=";
+      answer = b.toString();
+    }
+
     setState(() {
-      _question = "$a×$b=";
-      _answer = (a * b).toString();
+      _question = question;
+      _answer = answer;
       _currentHasBeenWrong = false;
       _currentIsOnTheRightTrack = true;
 

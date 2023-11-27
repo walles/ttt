@@ -4,10 +4,6 @@ Hone your multiplication skills!
 
 ## TODO
 
-### Add baseline features
-
-* Enable choosing between multiplication, division or both
-
 ### Make it publishable to everyone
 
 * Add contact information, both to GitHub Issues and via email
@@ -63,3 +59,4 @@ Hone your multiplication skills!
   per question.
 * Replace the tables selector list with a Wrap collection ChoiseChips, one for
   each table. This should take less space and look nicer.
+* Enable choosing between multiplication, division or both

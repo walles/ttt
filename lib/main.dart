@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ttt/config.dart';
 import 'package:ttt/game.dart';
 import 'package:ttt/stats.dart';
-import 'package:ttt/tables_selector_widget.dart';
+import 'package:ttt/game_config_widget.dart';
 
 void main() {
   runApp(const TttApp());
@@ -64,6 +64,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
 
   /// The tables the user wants to practice.
   Set<int> _requestedTables = {2, 3, 4, 5, 6, 7, 8, 9, 10};
+  bool _multiplication = true;
+  bool _division = true;
 
   Widget _startScreen() {
     List<Widget> children = [];
@@ -88,13 +90,20 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
 
     // Add a list widget with numbers 2-10
     children.add(
-      TablesSelectorWidget(
-          initialSelection: _requestedTables,
-          onSelectionChanged: (Set<int> tables) {
-            setState(() {
-              _requestedTables = tables;
-            });
-          }),
+      GameConfigWidget(
+        initialConfig: Config(_requestedTables, _multiplication, _division),
+        onTableSelectionChanged: (Set<int> tables) {
+          setState(() {
+            _requestedTables = tables;
+          });
+        },
+        onOperationChanged: (bool multiplication, bool division) {
+          setState(() {
+            _multiplication = multiplication;
+            _division = division;
+          });
+        },
+      ),
     );
 
     return Column(
@@ -114,7 +123,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
               _stats = stats;
             });
           },
-          config: Config(_requestedTables));
+          config: Config(_requestedTables, _multiplication, _division));
     } else {
       child = _startScreen();
     }
