@@ -8,8 +8,6 @@ Try here: <https://walles.github.io/ttt>
 
 ### Make it publishable to everyone
 
-* Test on Android in landscape mode
-* Test in a small browser window on desktop
 * Add a license
 
 ### Random improvements
@@ -63,3 +61,5 @@ Try here: <https://walles.github.io/ttt>
 * I18N and L10N into Swedish, follow the system language
 * Test on Android in a browser
 * Test on desktop in a browser
+* Test on Android in landscape mode
+* Test in a small browser window on desktop
