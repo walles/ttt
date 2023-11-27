@@ -1,0 +1,7 @@
+{
+    "@@locale": "sv",
+    "start_excl": "Kör!",
+    "multiplication": "Multiplikation",
+    "division": "Division",
+    "done_stats": "Du fick {rightOnFirstAttempt} rätt på {totalSeconds} sekunder, eller {perQuestionSeconds} sekunder per svar."
+}

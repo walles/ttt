@@ -6,6 +6,8 @@
 import 'package:flutter/material.dart';
 import 'package:ttt/config.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class GameConfigWidget extends StatefulWidget {
   final Config initialConfig;
   final void Function(Set<int>) onTableSelectionChanged;
@@ -61,7 +63,7 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
     }
 
     chips.add(ChoiceChip(
-      label: const Text("Multiplication"),
+      label: Text(AppLocalizations.of(context)!.multiplication),
       selected: _multiplication,
       onSelected: (bool selected) {
         setState(() {
@@ -76,7 +78,7 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
     ));
 
     chips.add(ChoiceChip(
-      label: const Text("Division"),
+      label: Text(AppLocalizations.of(context)!.division),
       selected: _division,
       onSelected: (bool selected) {
         setState(() {

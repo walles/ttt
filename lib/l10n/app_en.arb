@@ -1,0 +1,22 @@
+{
+    "@@locale": "en",
+    "start_excl": "Start!",
+    "multiplication": "Multiplication",
+    "division": "Division",
+    "done_stats": "You got {rightOnFirstAttempt} correct answers in {totalSeconds} seconds at {perQuestionSeconds} seconds per answer.",
+    "@done_stats": {
+        "placeholders": {
+            "rightOnFirstAttempt": {
+                "type": "int"
+            },
+            "totalSeconds": {
+                "type": "String",
+                "example": "1.2"
+            },
+            "perQuestionSeconds": {
+                "type": "String",
+                "example": "3.4"
+            }
+        }
+    }
+}

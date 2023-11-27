@@ -5,6 +5,8 @@ import 'package:ttt/help_dialog.dart';
 import 'package:ttt/stats.dart';
 import 'package:ttt/game_config_widget.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 void main() {
   runApp(const TttApp());
 }
@@ -17,26 +19,15 @@ class TttApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Timed Times Tables', // FIXME: Get this from some metadata file
+
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+
+      home: const TttHomeScreen(title: 'Timed Times Tables'),
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const TttHomeScreen(title: 'Timed Times Tables'),
     );
   }
 }
@@ -76,8 +67,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       String perQuestionDuration =
           (totalDurationSeconds / _stats!.rightOnFirstAttempt)
               .toStringAsFixed(1);
-      String statsText =
-          "You got ${_stats!.rightOnFirstAttempt} right answers in $totalDuration seconds at $perQuestionDuration seconds per answer.";
+      String statsText = AppLocalizations.of(context)!.done_stats(
+          _stats!.rightOnFirstAttempt, totalDuration, perQuestionDuration);
 
       children.add(Text(statsText));
 
@@ -90,7 +81,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
             _running = true;
           });
         },
-        child: const Text("Start!")));
+        child: Text(AppLocalizations.of(context)!.start_excl)));
 
     children.add(const SizedBox(height: 10));
 
