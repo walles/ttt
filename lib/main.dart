@@ -79,7 +79,10 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
           "You got ${_stats!.rightOnFirstAttempt} right answers in $totalDuration seconds at $perQuestionDuration seconds per answer.";
 
       children.add(Text(statsText));
+
+      children.add(const SizedBox(height: 10));
     }
+
     children.add(ElevatedButton(
         onPressed: () {
           setState(() {
@@ -87,6 +90,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
           });
         },
         child: const Text("Start!")));
+
+    children.add(const SizedBox(height: 10));
 
     // Add a list widget with numbers 2-10
     children.add(
