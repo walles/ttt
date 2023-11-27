@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ttt/config.dart';
 import 'package:ttt/game.dart';
 import 'package:ttt/help_dialog.dart';

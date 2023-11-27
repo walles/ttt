@@ -1,3 +1,6 @@
 {
-    "start_excl": "Kör!"
+    "@@locale": "sv",
+    "start_excl": "Kör!",
+    "multiplication": "Multiplikation",
+    "division": "Division"
 }

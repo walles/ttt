@@ -1,3 +1,6 @@
 {
-    "start_excl": "Start!"
+    "@@locale": "en",
+    "start_excl": "Start!",
+    "multiplication": "Multiplication",
+    "division": "Division"
 }
