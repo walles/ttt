@@ -6,6 +6,8 @@ import 'package:ttt/help_dialog.dart';
 import 'package:ttt/stats.dart';
 import 'package:ttt/game_config_widget.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 void main() {
   runApp(const TttApp());
 }
@@ -18,19 +20,10 @@ class TttApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Timed Times Tables', // FIXME: Get this from some metadata file
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
 
-        // FIXME: We get a red warning message in the console if we don't have
-        // this, but since we don't use any other Cupertino widgets, I think we
-        // should be fine without it.
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('sv'),
-      ],
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+
       home: const TttHomeScreen(title: 'Timed Times Tables'),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
