@@ -12,6 +12,7 @@ class _GameState extends State<Game> {
   late String _question;
   late String _answer;
   late bool _currentHasBeenWrong;
+  late bool _currentIsOnTheRightTrack;
   int _rightOnFirstAttempt = 0;
 
   bool _tooSlow = false;
@@ -64,6 +65,7 @@ class _GameState extends State<Game> {
       _question = "$a×$b=";
       _answer = (a * b).toString();
       _currentHasBeenWrong = false;
+      _currentIsOnTheRightTrack = true;
 
       _tooSlowTimer?.cancel();
 
@@ -88,16 +90,16 @@ class _GameState extends State<Game> {
     String? hintText = _tooSlow ? _answer : null;
 
     InputDecoration inputDecoration;
-    if (_currentHasBeenWrong) {
+    if (_currentIsOnTheRightTrack) {
       inputDecoration = InputDecoration(
         border: const OutlineInputBorder(),
-        filled: true,
-        fillColor: Colors.red,
         suffixText: hintText,
       );
     } else {
       inputDecoration = InputDecoration(
         border: const OutlineInputBorder(),
+        filled: true,
+        fillColor: Colors.red,
         suffixText: hintText,
       );
     }
@@ -128,9 +130,14 @@ class _GameState extends State<Game> {
                       _nextQuestion();
                       return;
                     }
-                    if (!_answer.startsWith(text)) {
+                    if (_answer.startsWith(text)) {
+                      setState(() {
+                        _currentIsOnTheRightTrack = true;
+                      });
+                    } else {
                       setState(() {
                         _currentHasBeenWrong = true;
+                        _currentIsOnTheRightTrack = false;
                       });
                     }
                   }),
