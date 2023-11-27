@@ -6,6 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:ttt/config.dart';
 import 'package:ttt/stats.dart';
 
+/// We want the user to be this quick or better at all questions
+const Duration _targetDuration = Duration(seconds: 5);
+
+/// Show hint after this delay
+final Duration _hintDelay = _targetDuration * 2;
+
 class _GameState extends State<Game> {
   // Game state
   int _questionNumberOneBased = 0;
@@ -70,7 +76,7 @@ class _GameState extends State<Game> {
       _tooSlowTimer?.cancel();
 
       _tooSlow = false;
-      _tooSlowTimer = Timer(const Duration(seconds: 5), () {
+      _tooSlowTimer = Timer(_hintDelay, () {
         setState(() {
           _tooSlow = true;
         });
