@@ -6,8 +6,6 @@ Hone your multiplication skills!
 
 ### Add baseline features
 
-* Replace the tables selector list with a Wrap collection ChoiseChips, one for
-  each table. This should take less space and look nicer.
 * Enable choosing between multiplication, division or both
 
 ### Make it publishable to everyone
@@ -63,18 +61,5 @@ Hone your multiplication skills!
 * Give the user 30s rather than 10 questions. Let the user finish the last
   question when the time runs out. For stats, show the user's speed in seconds
   per question.
-
----
-
-## Flutter Getting started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* Replace the tables selector list with a Wrap collection ChoiseChips, one for
+  each table. This should take less space and look nicer.

@@ -29,30 +29,32 @@ class _TablesSelectorWidgetState extends State<TablesSelectorWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: 9,
-      itemBuilder: (BuildContext context, int index) {
-        return CheckboxListTile(
-          title: Text("${index + 2}"),
-          value: _selected.contains(index + 2),
-          onChanged: (bool? value) {
-            // Prevent deselecting all tables
-            if (_selected.length == 1 && value == false) {
-              return;
-            }
+    List<ChoiceChip> chips = [];
+    for (int i = 2; i <= 10; i++) {
+      chips.add(ChoiceChip(
+        label: Text("$i"),
+        showCheckmark: false,
+        selected: _selected.contains(i),
+        onSelected: (bool selected) {
+          // Prevent deselecting all tables
+          if (_selected.length == 1 && selected == false) {
+            return;
+          }
 
-            setState(() {
-              if (value == true) {
-                _selected.add(index + 2);
-              } else {
-                _selected.remove(index + 2);
-              }
-              widget.onSelectionChanged(_selected);
-            });
-          },
-        );
-      },
+          setState(() {
+            if (selected == true) {
+              _selected.add(i);
+            } else {
+              _selected.remove(i);
+            }
+            widget.onSelectionChanged(_selected);
+          });
+        },
+      ));
+    }
+
+    return Wrap(
+      children: chips,
     );
   }
 }
