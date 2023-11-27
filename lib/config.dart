@@ -6,5 +6,8 @@ class Config {
   /// Which tables should we test the user on?
   final Set<int> tablesToTest;
 
-  Config(this.tablesToTest);
+  final bool multiplication;
+  final bool division;
+
+  Config(this.tablesToTest, this.multiplication, this.division);
 }
