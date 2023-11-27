@@ -61,7 +61,7 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
     }
 
     chips.add(ChoiceChip(
-      label: const Text("×"),
+      label: const Text("Multiplication"),
       selected: _multiplication,
       onSelected: (bool selected) {
         setState(() {
@@ -76,7 +76,7 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
     ));
 
     chips.add(ChoiceChip(
-      label: const Text("/"),
+      label: const Text("Division"),
       selected: _division,
       onSelected: (bool selected) {
         setState(() {
@@ -92,6 +92,7 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
 
     return Wrap(
       spacing: 8.0,
+      alignment: WrapAlignment.center,
       children: chips,
     );
   }
