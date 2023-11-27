@@ -41,7 +41,6 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
     for (int i = 2; i <= 10; i++) {
       chips.add(ChoiceChip(
         label: Text("$i"),
-        showCheckmark: false,
         selected: _selectedTables.contains(i),
         onSelected: (bool selected) {
           // Prevent deselecting all tables
@@ -63,7 +62,6 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
 
     chips.add(ChoiceChip(
       label: const Text("×"),
-      showCheckmark: false,
       selected: _multiplication,
       onSelected: (bool selected) {
         setState(() {
@@ -79,7 +77,6 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
 
     chips.add(ChoiceChip(
       label: const Text("/"),
-      showCheckmark: false,
       selected: _division,
       onSelected: (bool selected) {
         setState(() {
@@ -94,6 +91,7 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
     ));
 
     return Wrap(
+      spacing: 8.0,
       children: chips,
     );
   }
