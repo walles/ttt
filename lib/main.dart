@@ -82,7 +82,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
             _running = true;
           });
         },
-        child: const Text("Start!")));
+        child: Text(AppLocalizations.of(context)!.start_excl)));
 
     children.add(const SizedBox(height: 10));
 
