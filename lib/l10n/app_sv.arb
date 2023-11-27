@@ -5,7 +5,7 @@
     "division": "Division",
     "done_stats": "Du fick {rightOnFirstAttempt} rätt på {totalSeconds} sekunder, eller {perQuestionSeconds} sekunder per svar.",
     "help": "Hjälp",
-    "a_game_to_help_you_learn_times_tables": "Ett multiplikationsabellsspel",
+    "a_game_to_help_you_learn_times_tables": "Ett multiplikationstabellsspel",
     "source_code": "Källkod",
     "issues": "Felrapporter",
     "contact": "Kontakt",

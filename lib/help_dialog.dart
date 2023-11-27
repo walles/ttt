@@ -57,7 +57,7 @@ void showHelpDialog(BuildContext context) {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text("Close"),
+            child: Text(l10n.close),
           ),
         ],
       );
