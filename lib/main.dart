@@ -67,8 +67,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       String perQuestionDuration =
           (totalDurationSeconds / _stats!.rightOnFirstAttempt)
               .toStringAsFixed(1);
-      String statsText =
-          "You got ${_stats!.rightOnFirstAttempt} right answers in $totalDuration seconds at $perQuestionDuration seconds per answer.";
+      String statsText = AppLocalizations.of(context)!.done_stats(
+          _stats!.rightOnFirstAttempt, totalDuration, perQuestionDuration);
 
       children.add(Text(statsText));
 
