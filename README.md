@@ -8,8 +8,6 @@ Try here: <https://walles.github.io/ttt>
 
 ### Make it publishable to everyone
 
-* Add contact information, both to GitHub Issues and via email
-* Show the Git SHA
 * I18N and L10N into Swedish, follow the system language
 * Test on desktop in a browser
 * Test on Android
@@ -62,3 +60,4 @@ Try here: <https://walles.github.io/ttt>
 * Replace the tables selector list with a Wrap collection ChoiseChips, one for
   each table. This should take less space and look nicer.
 * Enable choosing between multiplication, division or both
+* Add contact information, both to GitHub Issues and via email

@@ -2,7 +2,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Widget bulletTextUrl(BuildContext context, String text, Uri uri) {
+Widget bulletTextUrl(BuildContext context, String text, Uri? uri) {
+  if (uri == null) {
+    return SelectableText.rich(TextSpan(text: "\u2022 $text"));
+  }
+
   return RichText(
       text: TextSpan(
     text: "\u2022 $text",
@@ -40,8 +44,7 @@ void showHelpDialog(BuildContext context) {
                 Uri.parse("https://github.com/walles/ttt")),
             bulletTextUrl(context, "Issues: ",
                 Uri.parse("https://github.com/walles/ttt/issues")),
-            bulletTextUrl(context, "Contact: ",
-                Uri.parse("mailto://johan.walles@gmail.com")),
+            bulletTextUrl(context, "Contact: johan.walles@gmail.com", null),
           ],
         ),
         actions: [
