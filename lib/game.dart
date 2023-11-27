@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ttt/config.dart';
@@ -12,9 +13,12 @@ const Duration _targetDuration = Duration(seconds: 5);
 /// Show hint after this delay
 final Duration _hintDelay = _targetDuration * 2;
 
+/// How long is one round?
+const Duration _gameDuration =
+    kDebugMode ? Duration(seconds: 10) : Duration(seconds: 30);
+
 class _GameState extends State<Game> {
   // Game state
-  int _questionNumberOneBased = 0;
   late String _question;
   late String _answer;
   late bool _currentHasBeenWrong;
@@ -24,10 +28,37 @@ class _GameState extends State<Game> {
   bool _tooSlow = false;
   Timer? _tooSlowTimer;
 
+  late Timer _progressTimer;
+
+  // Used for ensuring the display gets updated as time passes
+  double _elapsedSeconds = 0.0;
+
   // Stats state
   final DateTime _startTime = DateTime.now();
 
   final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _progressTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      setState(() {
+        _elapsedSeconds =
+            DateTime.now().difference(_startTime).inMilliseconds / 1000.0;
+      });
+    });
+
+    _generateQuestion();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _tooSlowTimer?.cancel();
+    _progressTimer.cancel();
+    super.dispose();
+  }
 
   void _nextQuestion() {
     setState(() {
@@ -35,21 +66,13 @@ class _GameState extends State<Game> {
         _rightOnFirstAttempt++;
       }
 
-      _questionNumberOneBased++;
-      if (_questionNumberOneBased > 10) {
+      var gameDuration = DateTime.now().difference(_startTime);
+      if (gameDuration > _gameDuration) {
         widget.onDone(Stats(
-            duration: DateTime.now().difference(_startTime),
-            rightOnFirstAttempt: _rightOnFirstAttempt));
+            duration: gameDuration, rightOnFirstAttempt: _rightOnFirstAttempt));
       }
       _generateQuestion();
     });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _tooSlowTimer?.cancel();
-    super.dispose();
   }
 
   void _generateQuestion() {
@@ -85,13 +108,6 @@ class _GameState extends State<Game> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _questionNumberOneBased = 1;
-    _generateQuestion();
-  }
-
-  @override
   Widget build(BuildContext context) {
     String? hintText = _tooSlow ? _answer : null;
 
@@ -109,6 +125,10 @@ class _GameState extends State<Game> {
         suffixText: hintText,
       );
     }
+
+    bool gameOverTime = _elapsedSeconds > _gameDuration.inSeconds;
+    double? progress =
+        gameOverTime ? null : _elapsedSeconds / _gameDuration.inSeconds;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -151,7 +171,7 @@ class _GameState extends State<Game> {
           ],
         ),
         LinearProgressIndicator(
-          value: (_questionNumberOneBased - 1) / 10,
+          value: progress,
         ),
       ],
     );

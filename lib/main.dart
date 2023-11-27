@@ -68,10 +68,15 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   Widget _startScreen() {
     List<Widget> children = [];
     if (_stats != null) {
-      children
-          .add(Text("You finished in ${_stats!.duration.inSeconds} seconds."));
-      children.add(Text(
-          "You got ${_stats!.rightOnFirstAttempt}/10 right on the first attempt."));
+      double totalDurationSeconds = _stats!.duration.inMilliseconds / 1000.0;
+      String totalDuration = totalDurationSeconds.toStringAsFixed(1);
+      String perQuestionDuration =
+          (totalDurationSeconds / _stats!.rightOnFirstAttempt)
+              .toStringAsFixed(1);
+      String statsText =
+          "You got ${_stats!.rightOnFirstAttempt} right answers in $totalDuration seconds at $perQuestionDuration seconds per answer.";
+
+      children.add(Text(statsText));
     }
     children.add(ElevatedButton(
         onPressed: () {

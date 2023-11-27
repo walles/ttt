@@ -4,28 +4,30 @@ Hone your multiplication skills!
 
 ## TODO
 
+### Add baseline features
+
+* Replace the tables selector list with a Wrap collection ChoiseChips, one for
+  each table. This should take less space and look nicer.
+* Enable choosing between multiplication, division or both
+
 ### Make it publishable to everyone
 
-* Add a license
 * Add contact information, both to GitHub Issues and via email
 * Show the Git SHA
-* Test on desktop
+* I18N and L10N into Swedish, follow the system language
+* Test on desktop in a browser
 * Test on Android
 * Test on Android in landscape mode
 * Test in a small browser window on desktop
-* I18N and L10N into Swedish, follow the system language
+* Add a license
 
 ### Random improvements
 
-* Give the user 30s rather than 10 questions. Let the user finish the last
-  question when the time runs out. For stats, show the user's speed in seconds
-  per question. Or questions per minute?
-* Replace the tables selector list with a collection of toggle buttons, one for
-  each table. I think this might take less space and look nicer.
-* Make an icon
+* When the user presses Start, start by showing a quick countdown from 3 to 1
+  before starting the questions
 * Add sound effects. Steal from Numbervaders perhaps?
 * Make the start screen look better when displaying stats
-* Enable choosing between multiplication, division and both
+* Make an icon
 * Avoid doing the same question twice. Might be hard with 10 questions and one
   multiplication table, let's just do our best!
 * Collect high scores
@@ -38,7 +40,6 @@ Hone your multiplication skills!
   * When the user passes something, deduct one needs-practice points
   * Try to take every other question from the needs-practice table if there's
     something in there
-* Based on the system language, support both Swedish and English
 * Adapt to the system's theme (dark / light)
 * Make the home screen look sensible on different resolutions
 
@@ -59,6 +60,9 @@ Hone your multiplication skills!
 * If the right answer hasn't been presented in five seconds, show the correct
   answer so that the player can type it
 * Enable picking which multiplication tables to test
+* Give the user 30s rather than 10 questions. Let the user finish the last
+  question when the time runs out. For stats, show the user's speed in seconds
+  per question.
 
 ---
 
