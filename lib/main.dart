@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ttt/config.dart';
 import 'package:ttt/game.dart';
+import 'package:ttt/help_dialog.dart';
 import 'package:ttt/stats.dart';
 import 'package:ttt/game_config_widget.dart';
 
@@ -135,13 +136,16 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help),
+            onPressed: () {
+              showHelpDialog(context);
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Container(
