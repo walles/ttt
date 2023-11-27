@@ -21,3 +21,7 @@ jobs:
         with:
           # Sends the deploy to walles/ttt rather than just walles
           baseHref: /ttt/
+
+          # Without this TTT looks horrible on Firefox / Android, tested
+          # 2023-11-27. Maybe we want to use WASM at some point?
+          webRenderer: canvaskit

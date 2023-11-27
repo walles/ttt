@@ -34,6 +34,8 @@ Try here: <https://walles.github.io/ttt>
   * When the user passes something, deduct one needs-practice points
   * Try to take every other question from the needs-practice table if there's
     something in there
+  * For each possible question, keep track of how long it took the user to
+    answer it the last time they got it right
 * Adapt to the system's theme (dark / light)
 * Make the home screen look sensible on different resolutions
 
