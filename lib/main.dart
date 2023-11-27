@@ -30,10 +30,17 @@ class TttApp extends StatelessWidget {
       supportedLocales: AppLocalizations.supportedLocales,
 
       home: const TttHomeScreen(title: 'Timed Times Tables'),
+
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.deepPurple, brightness: Brightness.dark),
+        useMaterial3: true,
+      ),
+      themeMode: ThemeMode.system,
     );
   }
 }

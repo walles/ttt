@@ -11,7 +11,6 @@ Try here: <https://walles.github.io/ttt>
 * When the user presses Start, start by showing a quick countdown from 3 to 1
   before starting the questions
 * Add sound effects. Steal from Numbervaders perhaps?
-* Make the start screen look better when displaying stats
 * Make an icon
 * Collect high scores
   * Individual high score tables based on tables / multiplication / division
@@ -25,8 +24,6 @@ Try here: <https://walles.github.io/ttt>
     something in there
   * For each possible question, keep track of how long it took the user to
     answer it the last time they got it right
-* Adapt to the system's theme (dark / light)
-* Make the home screen look sensible on different resolutions
 
 ### Done
 
@@ -59,3 +56,4 @@ Try here: <https://walles.github.io/ttt>
 * Test in a small browser window on desktop
 * Add a license
 * Avoid doing the same question twice in a row
+* Adapt to the system's theme (dark / light)
