@@ -18,5 +18,11 @@
                 "example": "3.4"
             }
         }
-    }
+    },
+    "help": "Help",
+    "a_game_to_help_you_learn_times_tables": "A game to help you learn times tables",
+    "source_code": "Source code",
+    "issues": "Issues",
+    "contact": "Contact",
+    "close": "Close"
 }
