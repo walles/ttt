@@ -8,9 +8,6 @@ Try here: <https://walles.github.io/ttt>
 
 ### Make it publishable to everyone
 
-* I18N and L10N into Swedish, follow the system language
-* Test on desktop in a browser
-* Test on Android
 * Test on Android in landscape mode
 * Test in a small browser window on desktop
 * Add a license
@@ -63,3 +60,6 @@ Try here: <https://walles.github.io/ttt>
   each table. This should take less space and look nicer.
 * Enable choosing between multiplication, division or both
 * Add contact information, both to GitHub Issues and via email
+* I18N and L10N into Swedish, follow the system language
+* Test on Android in a browser
+* Test on desktop in a browser
