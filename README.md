@@ -13,8 +13,6 @@ Try here: <https://walles.github.io/ttt>
 * Add sound effects. Steal from Numbervaders perhaps?
 * Make the start screen look better when displaying stats
 * Make an icon
-* Avoid doing the same question twice. Might be hard with 10 questions and one
-  multiplication table, let's just do our best!
 * Collect high scores
   * Individual high score tables based on tables / multiplication / division
     settings
@@ -60,3 +58,4 @@ Try here: <https://walles.github.io/ttt>
 * Test on Android in landscape mode
 * Test in a small browser window on desktop
 * Add a license
+* Avoid doing the same question twice in a row

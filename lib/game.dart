@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ttt/config.dart';
+import 'package:ttt/question.dart';
 import 'package:ttt/stats.dart';
 
 /// We want the user to be this quick or better at all questions
@@ -19,8 +19,7 @@ const Duration _gameDuration =
 
 class _GameState extends State<Game> {
   // Game state
-  late String _question;
-  late String _answer;
+  Question? _question;
   late bool _currentHasBeenWrong;
   late bool _currentIsOnTheRightTrack;
   int _rightOnFirstAttempt = 0;
@@ -76,40 +75,10 @@ class _GameState extends State<Game> {
   }
 
   void _generateQuestion() {
-    // Pick a random entry in the tables to test
-    var a = widget.config.tablesToTest
-        .elementAt(Random().nextInt(widget.config.tablesToTest.length));
-
-    // Pick a number to multiply with (2 to 10)
-    var b = Random().nextInt(9) + 2;
-
-    if (Random().nextBool()) {
-      // Switch places between a and b
-      var tmp = a;
-      a = b;
-      b = tmp;
-    }
-
-    bool isMultiplication; // Else division
-    if (widget.config.multiplication && widget.config.division) {
-      isMultiplication = Random().nextBool();
-    } else {
-      isMultiplication = widget.config.multiplication;
-    }
-
-    String question;
-    String answer;
-    if (isMultiplication) {
-      question = "$a×$b=";
-      answer = (a * b).toString();
-    } else {
-      question = "${a * b}/$a=";
-      answer = b.toString();
-    }
-
     setState(() {
-      _question = question;
-      _answer = answer;
+      final c = widget.config;
+      _question = Question.generate(
+          c.tablesToTest, c.multiplication, c.division, _question);
       _currentHasBeenWrong = false;
       _currentIsOnTheRightTrack = true;
 
@@ -126,7 +95,7 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
-    String? hintText = _tooSlow ? _answer : null;
+    String? hintText = _tooSlow ? _question!.answer : null;
 
     InputDecoration inputDecoration;
     if (_currentIsOnTheRightTrack) {
@@ -154,7 +123,7 @@ class _GameState extends State<Game> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              _question,
+              _question!.question,
             ),
             SizedBox(
               width: 100,
@@ -168,12 +137,12 @@ class _GameState extends State<Game> {
                     LengthLimitingTextInputFormatter("100".length),
                   ],
                   onChanged: (text) {
-                    if (text == _answer) {
+                    if (text == _question!.answer) {
                       _controller.clear();
                       _nextQuestion();
                       return;
                     }
-                    if (_answer.startsWith(text)) {
+                    if (_question!.answer.startsWith(text)) {
                       setState(() {
                         _currentIsOnTheRightTrack = true;
                       });
