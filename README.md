@@ -6,10 +6,6 @@ Try here: <https://walles.github.io/ttt>
 
 ## TODO
 
-### Make it publishable to everyone
-
-* Add a license
-
 ### Random improvements
 
 * When the user presses Start, start by showing a quick countdown from 3 to 1
@@ -63,3 +59,4 @@ Try here: <https://walles.github.io/ttt>
 * Test on desktop in a browser
 * Test on Android in landscape mode
 * Test in a small browser window on desktop
+* Add a license
