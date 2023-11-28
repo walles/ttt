@@ -180,7 +180,7 @@ class _GameState extends State<Game> {
     );
   }
 
-  void _playDing() async {
+  Future<void> _playDing() async {
     if (![
       ProcessingState.ready,
       ProcessingState.completed,
@@ -188,9 +188,9 @@ class _GameState extends State<Game> {
       return;
     }
 
-    _dingPlayer.pause();
-    _dingPlayer.seek(Duration.zero);
-    _dingPlayer.play();
+    await _dingPlayer.pause();
+    await _dingPlayer.seek(Duration.zero);
+    return _dingPlayer.play();
   }
 }
 
