@@ -8,8 +8,6 @@ Try here: <https://walles.github.io/ttt>
 
 ### Random improvements
 
-* When the user presses Start, start by showing a quick countdown from 3 to 1
-  before starting the questions
 * Add sound effects. Steal from Numbervaders perhaps?
 * Make an icon
 * Collect high scores
@@ -57,3 +55,5 @@ Try here: <https://walles.github.io/ttt>
 * Add a license
 * Avoid doing the same question twice in a row
 * Adapt to the system's theme (dark / light)
+* When the user presses Start, start by showing a quick countdown from 3 to 1
+  before starting the questions

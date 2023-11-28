@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ttt/config.dart';
+import 'package:ttt/countdown_widget.dart';
 import 'package:ttt/question.dart';
 import 'package:ttt/stats.dart';
 
@@ -24,6 +25,8 @@ class _GameState extends State<Game> {
   late bool _currentIsOnTheRightTrack;
   int _rightOnFirstAttempt = 0;
 
+  bool _countingDown = true;
+
   bool _tooSlow = false;
   Timer? _tooSlowTimer;
 
@@ -33,22 +36,25 @@ class _GameState extends State<Game> {
   double _elapsedSeconds = 0.0;
 
   // Stats state
-  final DateTime _startTime = DateTime.now();
+  late DateTime _startTime;
 
   final TextEditingController _controller = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
+  void _initState() {
+    setState(() {
+      _countingDown = false;
+      _startTime = DateTime.now();
 
-    _progressTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      setState(() {
-        _elapsedSeconds =
-            DateTime.now().difference(_startTime).inMilliseconds / 1000.0;
+      _progressTimer =
+          Timer.periodic(const Duration(milliseconds: 100), (timer) {
+        setState(() {
+          _elapsedSeconds =
+              DateTime.now().difference(_startTime).inMilliseconds / 1000.0;
+        });
       });
-    });
 
-    _generateQuestion();
+      _generateQuestion();
+    });
   }
 
   @override
@@ -95,6 +101,10 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
+    if (_countingDown) {
+      return CountdownWidget(onFinished: _initState);
+    }
+
     String? hintText = _tooSlow ? _question!.answer : null;
 
     InputDecoration inputDecoration;
