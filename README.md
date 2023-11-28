@@ -8,7 +8,6 @@ Try here: <https://walles.github.io/ttt>
 
 ### Random improvements
 
-* Add sound effects. Steal from Numbervaders perhaps?
 * Make an icon
 * Collect high scores
   * Individual high score tables based on tables / multiplication / division
@@ -57,3 +56,4 @@ Try here: <https://walles.github.io/ttt>
 * Adapt to the system's theme (dark / light)
 * When the user presses Start, start by showing a quick countdown from 3 to 1
   before starting the questions
+* Add a sound effect

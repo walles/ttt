@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:ttt/config.dart';
 import 'package:ttt/countdown_widget.dart';
 import 'package:ttt/question.dart';
@@ -36,6 +37,14 @@ class _GameState extends State<Game> {
 
   final TextEditingController _controller = TextEditingController();
 
+  final _dingPlayer = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    _dingPlayer.setAsset('assets/ding.mp3');
+  }
+
   void _initState() {
     setState(() {
       _countingDown = false;
@@ -58,6 +67,7 @@ class _GameState extends State<Game> {
     _controller.dispose();
     _tooSlowTimer?.cancel();
     _progressTimer.cancel();
+    _dingPlayer.dispose();
     super.dispose();
   }
 
@@ -144,6 +154,7 @@ class _GameState extends State<Game> {
                   ],
                   onChanged: (text) {
                     if (text == _question!.answer) {
+                      _playDing();
                       _controller.clear();
                       _nextQuestion();
                       return;
@@ -167,6 +178,19 @@ class _GameState extends State<Game> {
         ),
       ],
     );
+  }
+
+  void _playDing() async {
+    if (![
+      ProcessingState.ready,
+      ProcessingState.completed,
+    ].contains(_dingPlayer.playerState.processingState)) {
+      return;
+    }
+
+    _dingPlayer.pause();
+    _dingPlayer.seek(Duration.zero);
+    _dingPlayer.play();
   }
 }
 
