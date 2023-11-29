@@ -12,12 +12,15 @@ class GameConfigWidget extends StatefulWidget {
   final Config initialConfig;
   final void Function(Set<int>) onTableSelectionChanged;
   final void Function(bool multiplication, bool division) onOperationChanged;
+  final void Function(Duration) onDurationChanged;
 
-  const GameConfigWidget(
-      {super.key,
-      required this.initialConfig,
-      required this.onTableSelectionChanged,
-      required this.onOperationChanged});
+  const GameConfigWidget({
+    super.key,
+    required this.initialConfig,
+    required this.onTableSelectionChanged,
+    required this.onOperationChanged,
+    required this.onDurationChanged,
+  });
 
   @override
   State<GameConfigWidget> createState() => _GameConfigWidgetState();

@@ -71,6 +71,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   Set<int> _requestedTables = {2, 3, 4, 5, 6, 7, 8, 9, 10};
   bool _multiplication = true;
   bool _division = true;
+  Duration _duration = const Duration(seconds: 60);
 
   Widget _startScreen() {
     List<Widget> children = [];
@@ -105,7 +106,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     // Add a list widget with numbers 2-10
     children.add(
       GameConfigWidget(
-        initialConfig: Config(_requestedTables, _multiplication, _division),
+        initialConfig:
+            Config(_requestedTables, _multiplication, _division, _duration),
         onTableSelectionChanged: (Set<int> tables) {
           setState(() {
             _requestedTables = tables;
@@ -115,6 +117,11 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
           setState(() {
             _multiplication = multiplication;
             _division = division;
+          });
+        },
+        onDurationChanged: (Duration duration) {
+          setState(() {
+            _duration = duration;
           });
         },
       ),
@@ -137,7 +144,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
               _stats = stats;
             });
           },
-          config: Config(_requestedTables, _multiplication, _division));
+          config:
+              Config(_requestedTables, _multiplication, _division, _duration));
     } else {
       child = _startScreen();
     }
