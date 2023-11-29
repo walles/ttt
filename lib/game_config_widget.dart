@@ -30,6 +30,7 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
   Set<int> _selectedTables = {};
   bool _multiplication = true;
   bool _division = true;
+  Duration _duration = const Duration(seconds: 60);
 
   @override
   void initState() {
@@ -37,11 +38,46 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
     _selectedTables = widget.initialConfig.tablesToTest;
     _multiplication = widget.initialConfig.multiplication;
     _division = widget.initialConfig.division;
+    _duration = widget.initialConfig.duration;
+  }
+
+  MenuItemButton _durationButton(Duration duration) {
+    return MenuItemButton(
+      child: Text("${duration.inSeconds}s"),
+      onPressed: () {
+        setState(() {
+          _duration = duration;
+        });
+        widget.onDurationChanged(duration);
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    List<ChoiceChip> chips = [];
+    List<Widget> chips = [];
+
+    chips.add(MenuAnchor(
+        menuChildren: [
+          _durationButton(const Duration(seconds: 30)),
+          _durationButton(const Duration(seconds: 60)),
+          _durationButton(const Duration(seconds: 90)),
+        ],
+        builder:
+            (BuildContext context, MenuController controller, Widget? child) {
+          return ChoiceChip(
+            label: Text("${_duration.inSeconds}s"),
+            selected: true,
+            showCheckmark: false,
+            onSelected: (bool selected) {
+              if (controller.isOpen) {
+                controller.close();
+              } else {
+                controller.open();
+              }
+            },
+          );
+        }));
 
     chips.add(ChoiceChip(
       label: Text(AppLocalizations.of(context)!.multiplication),
