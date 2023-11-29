@@ -40,28 +40,6 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
   Widget build(BuildContext context) {
     List<ChoiceChip> chips = [];
 
-    for (int i = 2; i <= 10; i++) {
-      chips.add(ChoiceChip(
-        label: Text("$i"),
-        selected: _selectedTables.contains(i),
-        onSelected: (bool selected) {
-          // Prevent deselecting all tables
-          if (_selectedTables.length == 1 && selected == false) {
-            return;
-          }
-
-          setState(() {
-            if (selected == true) {
-              _selectedTables.add(i);
-            } else {
-              _selectedTables.remove(i);
-            }
-            widget.onTableSelectionChanged(_selectedTables);
-          });
-        },
-      ));
-    }
-
     chips.add(ChoiceChip(
       label: Text(AppLocalizations.of(context)!.multiplication),
       selected: _multiplication,
@@ -91,6 +69,28 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
         });
       },
     ));
+
+    for (int i = 2; i <= 10; i++) {
+      chips.add(ChoiceChip(
+        label: Text("$i"),
+        selected: _selectedTables.contains(i),
+        onSelected: (bool selected) {
+          // Prevent deselecting all tables
+          if (_selectedTables.length == 1 && selected == false) {
+            return;
+          }
+
+          setState(() {
+            if (selected == true) {
+              _selectedTables.add(i);
+            } else {
+              _selectedTables.remove(i);
+            }
+            widget.onTableSelectionChanged(_selectedTables);
+          });
+        },
+      ));
+    }
 
     return Wrap(
       spacing: 8.0,
