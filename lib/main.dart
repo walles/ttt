@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:ttt/config.dart';
+import 'package:ttt/effects_player.dart';
 import 'package:ttt/game.dart';
 import 'package:ttt/help_dialog.dart';
 import 'package:ttt/stats.dart';
@@ -74,17 +74,11 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   bool _division = true;
   Duration _duration = const Duration(seconds: 60);
 
-  final _dingPlayer = AudioPlayer();
-
-  @override
-  void initState() {
-    super.initState();
-    _dingPlayer.setAsset('assets/ding.mp3');
-  }
+  final _effectsPlayer = EffectsPlayer();
 
   @override
   void dispose() {
-    _dingPlayer.dispose();
+    _effectsPlayer.dispose();
     super.dispose();
   }
 
@@ -154,9 +148,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     if (_running) {
       child = Game(
         config: Config(_requestedTables, _multiplication, _division, _duration),
-        onAnswerAccepted: () {
-          _playDing();
-        },
+        effectsPlayer: _effectsPlayer,
         onDone: (Stats stats) {
           setState(() {
             _running = false;
@@ -192,18 +184,5 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _playDing() async {
-    if (![
-      ProcessingState.ready,
-      ProcessingState.completed,
-    ].contains(_dingPlayer.playerState.processingState)) {
-      return;
-    }
-
-    await _dingPlayer.pause();
-    await _dingPlayer.seek(Duration.zero);
-    return _dingPlayer.play();
   }
 }
