@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:ttt/config.dart';
+import 'package:ttt/effects_player.dart';
 import 'package:ttt/game.dart';
 import 'package:ttt/help_dialog.dart';
 import 'package:ttt/stats.dart';
@@ -73,6 +74,14 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   bool _division = true;
   Duration _duration = const Duration(seconds: 60);
 
+  final _effectsPlayer = EffectsPlayer();
+
+  @override
+  void dispose() {
+    _effectsPlayer.dispose();
+    super.dispose();
+  }
+
   Widget _startScreen() {
     List<Widget> children = [];
     if (_stats != null) {
@@ -138,14 +147,15 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     Widget child;
     if (_running) {
       child = Game(
-          onDone: (Stats stats) {
-            setState(() {
-              _running = false;
-              _stats = stats;
-            });
-          },
-          config:
-              Config(_requestedTables, _multiplication, _division, _duration));
+        config: Config(_requestedTables, _multiplication, _division, _duration),
+        effectsPlayer: _effectsPlayer,
+        onDone: (Stats stats) {
+          setState(() {
+            _running = false;
+            _stats = stats;
+          });
+        },
+      );
     } else {
       child = _startScreen();
     }

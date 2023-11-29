@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ttt/config.dart';
 import 'package:ttt/countdown_widget.dart';
+import 'package:ttt/effects_player.dart';
 import 'package:ttt/question.dart';
 import 'package:ttt/stats.dart';
 
@@ -144,6 +145,7 @@ class _GameState extends State<Game> {
                   ],
                   onChanged: (text) {
                     if (text == _question!.answer) {
+                      widget.effectsPlayer.playDing();
                       _controller.clear();
                       _nextQuestion();
                       return;
@@ -171,11 +173,17 @@ class _GameState extends State<Game> {
 }
 
 class Game extends StatefulWidget {
-  Game({super.key, required this.onDone, required this.config})
+  Game(
+      {super.key,
+      required this.config,
+      required this.effectsPlayer,
+      required this.onDone})
       : duration = kDebugMode ? const Duration(seconds: 10) : config.duration;
 
-  final Function(Stats stats) onDone;
   final Config config;
+
+  final EffectsPlayer effectsPlayer;
+  final Function(Stats stats) onDone;
   final Duration duration;
 
   @override
