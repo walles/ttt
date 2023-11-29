@@ -16,7 +16,7 @@ final Duration _hintDelay = _targetDuration * 2;
 
 /// How long is one round?
 const Duration _gameDuration =
-    kDebugMode ? Duration(seconds: 10) : Duration(seconds: 30);
+    kDebugMode ? Duration(seconds: 10) : Duration(seconds: 60);
 
 class _GameState extends State<Game> {
   // Game state
