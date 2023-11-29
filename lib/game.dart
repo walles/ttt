@@ -14,10 +14,6 @@ const Duration _targetDuration = Duration(seconds: 5);
 /// Show hint after this delay
 final Duration _hintDelay = _targetDuration * 2;
 
-/// How long is one round?
-const Duration _gameDuration =
-    kDebugMode ? Duration(seconds: 10) : Duration(seconds: 60);
-
 class _GameState extends State<Game> {
   // Game state
   Question? _question;
@@ -72,7 +68,7 @@ class _GameState extends State<Game> {
       }
 
       var gameDuration = DateTime.now().difference(_startTime);
-      if (gameDuration > _gameDuration) {
+      if (gameDuration > widget.duration) {
         widget.onDone(Stats(
             duration: gameDuration, rightOnFirstAttempt: _rightOnFirstAttempt));
       }
@@ -122,9 +118,9 @@ class _GameState extends State<Game> {
       );
     }
 
-    bool gameOverTime = _elapsedSeconds > _gameDuration.inSeconds;
+    bool gameOverTime = _elapsedSeconds > widget.duration.inSeconds;
     double? progress =
-        gameOverTime ? null : _elapsedSeconds / _gameDuration.inSeconds;
+        gameOverTime ? null : _elapsedSeconds / widget.duration.inSeconds;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -175,10 +171,12 @@ class _GameState extends State<Game> {
 }
 
 class Game extends StatefulWidget {
-  const Game({super.key, required this.onDone, required this.config});
+  Game({super.key, required this.onDone, required this.config})
+      : duration = kDebugMode ? const Duration(seconds: 10) : config.duration;
 
   final Function(Stats stats) onDone;
   final Config config;
+  final Duration duration;
 
   @override
   State<Game> createState() => _GameState();

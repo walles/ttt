@@ -9,5 +9,7 @@ class Config {
   final bool multiplication;
   final bool division;
 
-  Config(this.tablesToTest, this.multiplication, this.division);
+  final Duration duration;
+
+  Config(this.tablesToTest, this.multiplication, this.division, this.duration);
 }
