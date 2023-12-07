@@ -162,6 +162,17 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: _running
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  setState(() {
+                    _running = false;
+                    _stats = null;
+                  });
+                },
+              )
+            : null,
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
         actions: [
