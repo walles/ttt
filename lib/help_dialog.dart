@@ -12,6 +12,9 @@ Widget bulletTextUrl(BuildContext context, String text, Uri? uri) {
   return RichText(
       text: TextSpan(
     text: "\u2022 $text",
+    style: TextStyle(
+      color: Theme.of(context).colorScheme.onBackground,
+    ),
     children: [
       TextSpan(
         text: uri.toString(),
