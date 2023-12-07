@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:ttt/config.dart';
 import 'package:ttt/effects_player.dart';
@@ -12,9 +13,13 @@ import 'package:ttt/game_config_widget.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-void main() {
+const longTermStatsKey = "longTermStats";
+
+void main() async {
+  await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
+
+  await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(const TttApp());
   });
@@ -83,8 +88,14 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   void initState() {
     super.initState();
 
-    // FIXME: Get from persistent storage
-    _longTermStats = LongTermStats();
+    // FIXME: What do we get here if nothing is stored? An empty stats or
+    // something else?
+    LongTermStats? stats = GetStorage().read(longTermStatsKey);
+    if (stats != null) {
+      _longTermStats = stats;
+    } else {
+      _longTermStats = LongTermStats();
+    }
   }
 
   @override
@@ -170,7 +181,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
           // FIXME: Do this in a setState() block?
           _longTermStats.add(question, duration);
 
-          // FIXME: Persist the new state
+          // Persist the new state
+          GetStorage().write(longTermStatsKey, _longTermStats);
         },
       );
     } else {
