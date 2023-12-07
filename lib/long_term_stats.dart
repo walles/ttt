@@ -28,6 +28,8 @@ class LongTermStats {
     if (_assignments.length > _maxQuestions) {
       _assignments.removeAt(0);
     }
+
+    // FIXME: Persist state to disk
   }
 
   /// A top list of at most five entries.

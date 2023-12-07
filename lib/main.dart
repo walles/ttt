@@ -5,6 +5,7 @@ import 'package:ttt/config.dart';
 import 'package:ttt/effects_player.dart';
 import 'package:ttt/game.dart';
 import 'package:ttt/help_dialog.dart';
+import 'package:ttt/long_term_stats.dart';
 import 'package:ttt/stats.dart';
 import 'package:ttt/game_config_widget.dart';
 
@@ -67,6 +68,7 @@ class TttHomeScreen extends StatefulWidget {
 class _TttHomeScreenState extends State<TttHomeScreen> {
   bool _running = false;
   Stats? _stats;
+  late LongTermStats _longTermStats;
 
   /// The tables the user wants to practice.
   Set<int> _requestedTables = {2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -75,6 +77,14 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   Duration _duration = const Duration(seconds: 60);
 
   final _effectsPlayer = EffectsPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // FIXME: Get from persistent storage
+    _longTermStats = LongTermStats();
+  }
 
   @override
   void dispose() {
@@ -155,6 +165,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
             _stats = stats;
           });
         },
+        longTermStats: _longTermStats,
       );
     } else {
       child = _startScreen();

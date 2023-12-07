@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:ttt/config.dart';
 import 'package:ttt/countdown_widget.dart';
 import 'package:ttt/effects_player.dart';
+import 'package:ttt/long_term_stats.dart';
 import 'package:ttt/question.dart';
 import 'package:ttt/stats.dart';
 
@@ -16,6 +17,8 @@ const Duration _targetDuration = Duration(seconds: 5);
 final Duration _hintDelay = _targetDuration * 2;
 
 class _GameState extends State<Game> {
+  _GameState();
+
   // Game state
   Question? _question;
   late bool _currentHasBeenWrong;
@@ -33,20 +36,21 @@ class _GameState extends State<Game> {
   double _elapsedSeconds = 0.0;
 
   // Stats state
-  late DateTime _startTime;
+  late DateTime _gameStartTime;
+  late DateTime _questionStartTime;
 
   final TextEditingController _controller = TextEditingController();
 
   void _initState() {
     setState(() {
       _countingDown = false;
-      _startTime = DateTime.now();
+      _gameStartTime = DateTime.now();
 
       _progressTimer =
           Timer.periodic(const Duration(milliseconds: 100), (timer) {
         setState(() {
           _elapsedSeconds =
-              DateTime.now().difference(_startTime).inMilliseconds / 1000.0;
+              DateTime.now().difference(_gameStartTime).inMilliseconds / 1000.0;
         });
       });
 
@@ -68,7 +72,10 @@ class _GameState extends State<Game> {
         _rightOnFirstAttempt++;
       }
 
-      var gameDuration = DateTime.now().difference(_startTime);
+      widget.longTermStats
+          .add(_question!, DateTime.now().difference(_questionStartTime));
+
+      var gameDuration = DateTime.now().difference(_gameStartTime);
       if (gameDuration > widget.duration) {
         widget.onDone(Stats(
             duration: gameDuration, rightOnFirstAttempt: _rightOnFirstAttempt));
@@ -93,6 +100,8 @@ class _GameState extends State<Game> {
           _tooSlow = true;
         });
       });
+
+      _questionStartTime = DateTime.now();
     });
   }
 
@@ -177,7 +186,8 @@ class Game extends StatefulWidget {
       {super.key,
       required this.config,
       required this.effectsPlayer,
-      required this.onDone})
+      required this.onDone,
+      required this.longTermStats})
       : duration = kDebugMode ? const Duration(seconds: 10) : config.duration;
 
   final Config config;
@@ -185,6 +195,7 @@ class Game extends StatefulWidget {
   final EffectsPlayer effectsPlayer;
   final Function(Stats stats) onDone;
   final Duration duration;
+  final LongTermStats longTermStats;
 
   @override
   State<Game> createState() => _GameState();
