@@ -1,23 +1,30 @@
 import 'dart:math';
 
+enum Operation { multiplication, division }
+
 class Question {
-  final String question;
   final String answer;
 
-  Question._(this.question, this.answer);
+  final int a;
+  final Operation operation;
+  final int b;
+
+  Question._(this.a, this.operation, this.b, this.answer);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is Question &&
             runtimeType == other.runtimeType &&
-            question == other.question &&
+            a == other.a &&
+            operation == other.operation &&
+            b == other.b &&
             answer == other.answer;
   }
 
   @override
   int get hashCode {
-    return question.hashCode ^ answer.hashCode;
+    return a.hashCode ^ operation.hashCode ^ b.hashCode ^ answer.hashCode;
   }
 
   static Question generate(Set<int> tablesToTest, bool multiplication,
@@ -36,27 +43,34 @@ class Question {
         b = tmp;
       }
 
-      bool isMultiplication; // Else division
+      Operation operation;
       if (multiplication && division) {
-        isMultiplication = Random().nextBool();
+        operation =
+            Random().nextBool() ? Operation.multiplication : Operation.division;
       } else {
-        isMultiplication = multiplication;
+        operation =
+            multiplication ? Operation.multiplication : Operation.division;
       }
 
-      String question;
       String answer;
-      if (isMultiplication) {
-        question = "$a×$b=";
+      if (operation == Operation.multiplication) {
         answer = (a * b).toString();
       } else {
-        question = "${a * b}/$a=";
         answer = b.toString();
       }
 
-      newQuestion = Question._(question, answer);
+      newQuestion = Question._(a, operation, b, answer);
       if (previousQuestion == null || newQuestion != previousQuestion) {
         return newQuestion;
       }
+    }
+  }
+
+  String getQuestionText() {
+    if (operation == Operation.multiplication) {
+      return "$a×$b=";
+    } else {
+      return "${a * b}/$a=";
     }
   }
 }

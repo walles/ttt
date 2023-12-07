@@ -130,7 +130,7 @@ class _GameState extends State<Game> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              _question!.question,
+              _question!.getQuestionText(),
             ),
             SizedBox(
               width: 100,
