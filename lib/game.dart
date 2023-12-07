@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:ttt/config.dart';
 import 'package:ttt/countdown_widget.dart';
 import 'package:ttt/effects_player.dart';
-import 'package:ttt/long_term_stats.dart';
 import 'package:ttt/question.dart';
 import 'package:ttt/stats.dart';
 
@@ -72,8 +71,8 @@ class _GameState extends State<Game> {
         _rightOnFirstAttempt++;
       }
 
-      widget.longTermStats
-          .add(_question!, DateTime.now().difference(_questionStartTime));
+      widget.onQuestionAnswered(
+          _question!, DateTime.now().difference(_questionStartTime));
 
       var gameDuration = DateTime.now().difference(_gameStartTime);
       if (gameDuration > widget.duration) {
@@ -182,20 +181,20 @@ class _GameState extends State<Game> {
 }
 
 class Game extends StatefulWidget {
-  Game(
-      {super.key,
-      required this.config,
-      required this.effectsPlayer,
-      required this.onDone,
-      required this.longTermStats})
-      : duration = kDebugMode ? const Duration(seconds: 10) : config.duration;
+  Game({
+    super.key,
+    required this.config,
+    required this.effectsPlayer,
+    required this.onQuestionAnswered,
+    required this.onDone,
+  }) : duration = kDebugMode ? const Duration(seconds: 10) : config.duration;
 
   final Config config;
+  final Duration duration;
 
   final EffectsPlayer effectsPlayer;
+  final Function(Question question, Duration duration) onQuestionAnswered;
   final Function(Stats stats) onDone;
-  final Duration duration;
-  final LongTermStats longTermStats;
 
   @override
   State<Game> createState() => _GameState();

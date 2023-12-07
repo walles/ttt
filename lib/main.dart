@@ -6,6 +6,7 @@ import 'package:ttt/effects_player.dart';
 import 'package:ttt/game.dart';
 import 'package:ttt/help_dialog.dart';
 import 'package:ttt/long_term_stats.dart';
+import 'package:ttt/question.dart';
 import 'package:ttt/stats.dart';
 import 'package:ttt/game_config_widget.dart';
 
@@ -165,7 +166,12 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
             _stats = stats;
           });
         },
-        longTermStats: _longTermStats,
+        onQuestionAnswered: (Question question, Duration duration) {
+          // FIXME: Do this in a setState() block?
+          _longTermStats.add(question, duration);
+
+          // FIXME: Persist the new state
+        },
       );
     } else {
       child = _startScreen();
