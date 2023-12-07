@@ -134,7 +134,6 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
 
     children.add(const SizedBox(height: 10));
 
-    // Add a list widget with numbers 2-10
     children.add(
       GameConfigWidget(
         initialConfig:
@@ -157,6 +156,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         },
       ),
     );
+
+    // FIXME: Add a scrollable long term stats widget here
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
