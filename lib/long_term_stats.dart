@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:ttt/question.dart';
 
 const _maxQuestions = 50;
@@ -12,7 +13,6 @@ class TopListEntry {
 
 class _StatsEntry {
   final Question question;
-
   final Duration duration;
 
   _StatsEntry(this.question, this.duration);
@@ -25,12 +25,33 @@ class _StatsEntry {
   _StatsEntry.fromJson(Map<String, dynamic> json)
       : question = Question.fromJson(json['question']),
         duration = Duration(milliseconds: json['duration_ms']);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is _StatsEntry &&
+          runtimeType == other.runtimeType &&
+          question == other.question &&
+          duration == other.duration;
+
+  @override
+  int get hashCode => question.hashCode ^ duration.hashCode;
 }
 
 class LongTermStats {
   final List<_StatsEntry> _assignments;
 
   LongTermStats() : _assignments = [];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LongTermStats &&
+          runtimeType == other.runtimeType &&
+          listEquals(_assignments, other._assignments);
+
+  @override
+  int get hashCode => _assignments.hashCode;
 
   void add(Question question, Duration duration) {
     _assignments.add(_StatsEntry(question, duration));
