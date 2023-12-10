@@ -107,8 +107,12 @@ class LongTermStats {
     for (final entry in durations.entries) {
       final durations = entry.value;
       durations.sort();
-      final median = durations[durations.length ~/ 2];
-      topList.add(TopListEntry(entry.key, median));
+      var midPoint = durations.length ~/ 2;
+      final medianMs = durations.length % 2 == 0
+          ? (durations[midPoint - 1] + durations[midPoint]).inMilliseconds / 2
+          : durations[midPoint].inMilliseconds;
+      topList.add(
+          TopListEntry(entry.key, Duration(milliseconds: medianMs.floor())));
     }
 
     // Sort the list by duration, longest first

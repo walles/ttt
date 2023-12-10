@@ -24,8 +24,6 @@ void main() {
     }
   });
 
-  // FIXME: Test even and odd length medians
-
   test("JSON (de)serialization", () {
     LongTermStats base = LongTermStats();
 
