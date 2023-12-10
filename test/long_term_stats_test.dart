@@ -39,5 +39,11 @@ void main() {
     expect(base, deserialized);
   });
 
-  // FIXME: Test deserializing just '{}'
+  // We can get just {} from the web browser's local storage, and we should
+  // accept that.
+  test("Deserialize {}", () {
+    LongTermStats empty = LongTermStats();
+    LongTermStats deserializedEmpty = LongTermStats.fromJson(jsonDecode("{}"));
+    expect(deserializedEmpty, empty);
+  });
 }

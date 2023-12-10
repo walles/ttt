@@ -123,7 +123,9 @@ class LongTermStats {
       };
 
   LongTermStats.fromJson(Map<String, dynamic> json)
-      : _assignments = (json['assignments'] as List<dynamic>)
-            .map((e) => _StatsEntry.fromJson(e))
-            .toList();
+      : _assignments = json.containsKey("assignments")
+            ? (json['assignments'] as List<dynamic>)
+                .map((e) => _StatsEntry.fromJson(e))
+                .toList()
+            : [];
 }
