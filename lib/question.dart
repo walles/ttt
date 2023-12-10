@@ -73,4 +73,19 @@ class Question {
       return "${a * b}/$a=";
     }
   }
+
+  Map<String, dynamic> toJson() => {
+        'a': a,
+        'operation': operation == Operation.multiplication ? '*' : '/',
+        'b': b,
+        'answer': answer,
+      };
+
+  Question.fromJson(Map<String, dynamic> json)
+      : a = json['a'],
+        operation = json['operation'] == '*'
+            ? Operation.multiplication
+            : Operation.division,
+        b = json['b'],
+        answer = json['answer'];
 }

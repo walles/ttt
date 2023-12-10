@@ -7,6 +7,9 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const TttApp());
 
+    // Ref: https://stackoverflow.com/a/68257038/473672
+    await tester.pumpAndSettle();
+
     // Verify that our counter starts at 0.
     expect(find.text('Timed Times Tables'), findsOneWidget);
   });

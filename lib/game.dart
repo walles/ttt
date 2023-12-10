@@ -16,6 +16,8 @@ const Duration _targetDuration = Duration(seconds: 5);
 final Duration _hintDelay = _targetDuration * 2;
 
 class _GameState extends State<Game> {
+  _GameState();
+
   // Game state
   Question? _question;
   late bool _currentHasBeenWrong;
@@ -33,20 +35,21 @@ class _GameState extends State<Game> {
   double _elapsedSeconds = 0.0;
 
   // Stats state
-  late DateTime _startTime;
+  late DateTime _gameStartTime;
+  late DateTime _questionStartTime;
 
   final TextEditingController _controller = TextEditingController();
 
   void _initState() {
     setState(() {
       _countingDown = false;
-      _startTime = DateTime.now();
+      _gameStartTime = DateTime.now();
 
       _progressTimer =
           Timer.periodic(const Duration(milliseconds: 100), (timer) {
         setState(() {
           _elapsedSeconds =
-              DateTime.now().difference(_startTime).inMilliseconds / 1000.0;
+              DateTime.now().difference(_gameStartTime).inMilliseconds / 1000.0;
         });
       });
 
@@ -68,7 +71,10 @@ class _GameState extends State<Game> {
         _rightOnFirstAttempt++;
       }
 
-      var gameDuration = DateTime.now().difference(_startTime);
+      widget.onQuestionAnswered(
+          _question!, DateTime.now().difference(_questionStartTime));
+
+      var gameDuration = DateTime.now().difference(_gameStartTime);
       if (gameDuration > widget.duration) {
         widget.onDone(Stats(
             duration: gameDuration, rightOnFirstAttempt: _rightOnFirstAttempt));
@@ -93,6 +99,8 @@ class _GameState extends State<Game> {
           _tooSlow = true;
         });
       });
+
+      _questionStartTime = DateTime.now();
     });
   }
 
@@ -173,18 +181,20 @@ class _GameState extends State<Game> {
 }
 
 class Game extends StatefulWidget {
-  Game(
-      {super.key,
-      required this.config,
-      required this.effectsPlayer,
-      required this.onDone})
-      : duration = kDebugMode ? const Duration(seconds: 10) : config.duration;
+  Game({
+    super.key,
+    required this.config,
+    required this.effectsPlayer,
+    required this.onQuestionAnswered,
+    required this.onDone,
+  }) : duration = kDebugMode ? const Duration(seconds: 10) : config.duration;
 
   final Config config;
+  final Duration duration;
 
   final EffectsPlayer effectsPlayer;
+  final Function(Question question, Duration duration) onQuestionAnswered;
   final Function(Stats stats) onDone;
-  final Duration duration;
 
   @override
   State<Game> createState() => _GameState();

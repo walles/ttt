@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:ttt/config.dart';
 import 'package:ttt/effects_player.dart';
 import 'package:ttt/game.dart';
 import 'package:ttt/help_dialog.dart';
+import 'package:ttt/long_term_stats.dart';
+import 'package:ttt/question.dart';
 import 'package:ttt/stats.dart';
 import 'package:ttt/game_config_widget.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-void main() {
+const longTermStatsKey = "longTermStats";
+
+void main() async {
+  await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
+
+  await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(const TttApp());
   });
@@ -67,6 +74,7 @@ class TttHomeScreen extends StatefulWidget {
 class _TttHomeScreenState extends State<TttHomeScreen> {
   bool _running = false;
   Stats? _stats;
+  late LongTermStats _longTermStats;
 
   /// The tables the user wants to practice.
   Set<int> _requestedTables = {2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -75,6 +83,20 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   Duration _duration = const Duration(seconds: 60);
 
   final _effectsPlayer = EffectsPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // FIXME: What do we get here if nothing is stored? An empty stats or
+    // something else?
+    LongTermStats? stats = GetStorage().read(longTermStatsKey);
+    if (stats != null) {
+      _longTermStats = stats;
+    } else {
+      _longTermStats = LongTermStats();
+    }
+  }
 
   @override
   void dispose() {
@@ -112,7 +134,6 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
 
     children.add(const SizedBox(height: 10));
 
-    // Add a list widget with numbers 2-10
     children.add(
       GameConfigWidget(
         initialConfig:
@@ -136,6 +157,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       ),
     );
 
+    // FIXME: Add a scrollable long term stats widget here
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: children,
@@ -154,6 +177,13 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
             _running = false;
             _stats = stats;
           });
+        },
+        onQuestionAnswered: (Question question, Duration duration) {
+          // FIXME: Do this in a setState() block?
+          _longTermStats.add(question, duration);
+
+          // Persist the new state
+          GetStorage().write(longTermStatsKey, _longTermStats);
         },
       );
     } else {

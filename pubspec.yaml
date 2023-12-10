@@ -33,6 +33,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  get_storage: ^2.1.1
   intl: any
   just_audio: ^0.9.36
   url_launcher: ^6.2.1
