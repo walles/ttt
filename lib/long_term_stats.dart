@@ -1,7 +1,5 @@
 import 'package:ttt/question.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 const _maxQuestions = 50;
 
 class TopListEntry {
@@ -18,10 +16,21 @@ class _StatsEntry {
   final Duration duration;
 
   _StatsEntry(this.question, this.duration);
+
+  Map<String, dynamic> toJson() => {
+        'question': question.toJson(),
+        'duration': duration.inMilliseconds,
+      };
+
+  _StatsEntry.fromJson(Map<String, dynamic> json)
+      : question = Question.fromJson(json['question']),
+        duration = Duration(milliseconds: json['duration']);
 }
 
 class LongTermStats {
-  final List<_StatsEntry> _assignments = [];
+  final List<_StatsEntry> _assignments;
+
+  LongTermStats() : _assignments = [];
 
   void add(Question question, Duration duration) {
     _assignments.add(_StatsEntry(question, duration));
@@ -44,7 +53,7 @@ class LongTermStats {
   /// The list is sorted by duration, longest (needs most practice) first.
   ///
   /// To be in the list, a category must have at least three members.
-  List<TopListEntry> getTopList(AppLocalizations l10n) {
+  List<TopListEntry> getTopList(String multiplication, String division) {
     final Map<String, List<Duration>> durations = {};
 
     for (final assignment in _assignments) {
@@ -56,8 +65,8 @@ class LongTermStats {
           .add(assignment.duration);
 
       final opName = assignment.question.operation == Operation.multiplication
-          ? l10n.multiplication
-          : l10n.division;
+          ? multiplication
+          : division;
       durations.putIfAbsent(opName, () => []).add(assignment.duration);
     }
 
@@ -66,10 +75,10 @@ class LongTermStats {
 
     // Ensure either both or neither of multiplication and division are in the
     // list.
-    if (durations.containsKey(l10n.multiplication) !=
-        durations.containsKey(l10n.division)) {
-      durations.remove(l10n.multiplication);
-      durations.remove(l10n.division);
+    if (durations.containsKey(multiplication) !=
+        durations.containsKey(division)) {
+      durations.remove(multiplication);
+      durations.remove(division);
     }
 
     // Calculate the median duration for each category
@@ -86,4 +95,13 @@ class LongTermStats {
 
     return topList;
   }
+
+  Map<String, dynamic> toJson() => {
+        'assignments': _assignments.map((e) => e.toJson()),
+      };
+
+  LongTermStats.fromJson(Map<String, dynamic> json)
+      : _assignments = (json['assignments'] as List<dynamic>)
+            .map((e) => _StatsEntry.fromJson(e))
+            .toList();
 }
