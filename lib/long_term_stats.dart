@@ -19,12 +19,12 @@ class _StatsEntry {
 
   Map<String, dynamic> toJson() => {
         'question': question.toJson(),
-        'duration': duration.inMilliseconds,
+        'duration_ms': duration.inMilliseconds,
       };
 
   _StatsEntry.fromJson(Map<String, dynamic> json)
       : question = Question.fromJson(json['question']),
-        duration = Duration(milliseconds: json['duration']);
+        duration = Duration(milliseconds: json['duration_ms']);
 }
 
 class LongTermStats {
@@ -97,7 +97,8 @@ class LongTermStats {
   }
 
   Map<String, dynamic> toJson() => {
-        'assignments': _assignments.map((e) => e.toJson()),
+        'assignments':
+            _assignments.map((e) => e.toJson()).toList(growable: false),
       };
 
   LongTermStats.fromJson(Map<String, dynamic> json)
