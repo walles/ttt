@@ -36,7 +36,7 @@ void main() {
 
     String json = jsonEncode(base);
     LongTermStats deserialized = LongTermStats.fromJson(jsonDecode(json));
-    expect(base, deserialized);
+    expect(deserialized, base);
   });
 
   // We can get just {} from the web browser's local storage, and we should
