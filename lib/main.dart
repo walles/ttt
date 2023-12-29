@@ -155,13 +155,12 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       ),
     );
 
-    // FIXME: Add a scrollable long term stats widget here
     List<TopListEntry> topList = _longTermStats.getTopList(
         AppLocalizations.of(context)!.multiplication,
         AppLocalizations.of(context)!.division);
 
     // Having just one line in the top list looks a bit weird, so let's show it
-    // only if there are at least two entries.
+    // when there are at least two entries.
     if (topList.length >= 2) {
       children.add(const SizedBox(height: 10));
       children.add(Text(AppLocalizations.of(context)!.statistics));
