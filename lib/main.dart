@@ -88,11 +88,9 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   void initState() {
     super.initState();
 
-    // FIXME: What do we get here if nothing is stored? An empty stats or
-    // something else?
-    LongTermStats? stats = GetStorage().read(longTermStatsKey);
-    if (stats != null) {
-      _longTermStats = stats;
+    if (GetStorage().hasData(longTermStatsKey)) {
+      _longTermStats =
+          LongTermStats.fromJson(GetStorage().read(longTermStatsKey));
     } else {
       _longTermStats = LongTermStats();
     }
