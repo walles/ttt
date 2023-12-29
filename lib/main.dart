@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
@@ -103,13 +105,13 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   }
 
   Widget _startScreen() {
+    // Note that we need to explicitly pass the locale to NumberFormat,
+    // otherwise we get "." decimal separators even in Swedish.
+    final NumberFormat oneDecimal =
+        NumberFormat('#0.0', Localizations.localeOf(context).toString());
+
     List<Widget> children = [];
     if (_stats != null) {
-      // Note that we need to explicitly pass the locale to NumberFormat,
-      // otherwise we get "." decimal separators even in Swedish.
-      NumberFormat oneDecimal =
-          NumberFormat('#0.0', Localizations.localeOf(context).toString());
-
       double totalDurationSeconds = _stats!.duration.inMilliseconds / 1000.0;
       String totalDuration = oneDecimal.format(totalDurationSeconds);
       String perQuestionDuration = oneDecimal
@@ -156,6 +158,26 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     );
 
     // FIXME: Add a scrollable long term stats widget here
+    List<TopListEntry> topList = _longTermStats.getTopList(
+        AppLocalizations.of(context)!.multiplication,
+        AppLocalizations.of(context)!.division);
+    if (topList.isNotEmpty) {
+      // FIXME: Make this look good
+      // FIXME: Test with an empty top list
+      // FIXME: Test with a top list that fits on the screen
+      // FIXME: Test with a top list that doesn't fit on the screen
+
+      // FIXME: Add a header here?
+      // children.add(const SizedBox(height: 10));
+      // children.add(Text(AppLocalizations.of(context)!.top_list));
+      children.add(const SizedBox(height: 10));
+      children.add(Column(
+        children: topList
+            .map((TopListEntry entry) => Text(
+                "${entry.name}: ${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}"))
+            .toList(),
+      ));
+    }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
