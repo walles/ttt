@@ -163,8 +163,6 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     // Having just one line in the top list looks a bit weird, so let's show it
     // only if there are at least two entries.
     if (topList.length >= 2) {
-      // FIXME: Test with an empty top list
-      // FIXME: Test with a top list that fits on the screen
       // FIXME: Test with a top list that doesn't fit on the screen
 
       children.add(const SizedBox(height: 10));
