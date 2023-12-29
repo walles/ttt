@@ -172,7 +172,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       children.add(Column(
         children: topList
             .map((TopListEntry entry) => Text(
-                "${entry.name}: ${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}"))
+                "${entry.name}: ${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"))
             .toList(),
       ));
     }
