@@ -3,6 +3,7 @@
     "start_excl": "Start!",
     "multiplication": "Multiplication",
     "division": "Division",
+    "statistics": "Statistics",
     "done_stats": "You got {rightOnFirstAttempt} correct answers in {totalSeconds} seconds at {perQuestionSeconds} seconds per answer.",
     "@done_stats": {
         "placeholders": {

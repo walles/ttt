@@ -103,13 +103,13 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   }
 
   Widget _startScreen() {
+    // Note that we need to explicitly pass the locale to NumberFormat,
+    // otherwise we get "." decimal separators even in Swedish.
+    final NumberFormat oneDecimal =
+        NumberFormat('#0.0', Localizations.localeOf(context).toString());
+
     List<Widget> children = [];
     if (_stats != null) {
-      // Note that we need to explicitly pass the locale to NumberFormat,
-      // otherwise we get "." decimal separators even in Swedish.
-      NumberFormat oneDecimal =
-          NumberFormat('#0.0', Localizations.localeOf(context).toString());
-
       double totalDurationSeconds = _stats!.duration.inMilliseconds / 1000.0;
       String totalDuration = oneDecimal.format(totalDurationSeconds);
       String perQuestionDuration = oneDecimal
@@ -155,7 +155,50 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       ),
     );
 
-    // FIXME: Add a scrollable long term stats widget here
+    List<TopListEntry> topList = _longTermStats.getTopList(
+        AppLocalizations.of(context)!.multiplication,
+        AppLocalizations.of(context)!.division);
+
+    // Having just one line in the top list looks a bit weird, so let's show it
+    // when there are at least two entries.
+    if (topList.length >= 2) {
+      children.add(const SizedBox(height: 10));
+      children.add(Text(AppLocalizations.of(context)!.statistics));
+      children.add(
+        // Regarding Expanded + SingleChildScrollView:
+        // https://stackoverflow.com/a/58567624/473672
+        //
+        // FIXME: I would prefer to use Expanded only when the stats table is
+        // high enough to need scrolling.
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Table(
+              defaultColumnWidth: const IntrinsicColumnWidth(),
+              children: topList.map((TopListEntry entry) {
+                return TableRow(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(
+                        right:
+                            8.0, // FIXME: What is the unit here? How will this look on different devices?
+                      ),
+                      child: Text(entry.name),
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                          "${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      );
+    }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
