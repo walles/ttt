@@ -161,6 +161,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         AppLocalizations.of(context)!.division);
     if (topList.isNotEmpty) {
       // FIXME: Make this look good
+      // FIXME: Test this with both light and dark theme
       // FIXME: Test with an empty top list
       // FIXME: Test with a top list that fits on the screen
       // FIXME: Test with a top list that doesn't fit on the screen
@@ -169,12 +170,30 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       // children.add(const SizedBox(height: 10));
       // children.add(Text(AppLocalizations.of(context)!.top_list));
       children.add(const SizedBox(height: 10));
-      children.add(Column(
-        children: topList
-            .map((TopListEntry entry) => Text(
-                "${entry.name}: ${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"))
-            .toList(),
-      ));
+      children.add(
+        Table(
+          defaultColumnWidth: const IntrinsicColumnWidth(),
+          children: topList.map((TopListEntry entry) {
+            return TableRow(
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(
+                    right:
+                        8.0, // FIXME: What is the unit here? How will this look on different devices?
+                  ),
+                  child: Text(entry.name),
+                ),
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                      "${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"),
+                ),
+              ],
+            );
+          }).toList(),
+        ),
+      );
     }
 
     return Column(
