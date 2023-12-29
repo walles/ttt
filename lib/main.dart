@@ -163,32 +163,40 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     // Having just one line in the top list looks a bit weird, so let's show it
     // only if there are at least two entries.
     if (topList.length >= 2) {
-      // FIXME: Test with a top list that doesn't fit on the screen
-
       children.add(const SizedBox(height: 10));
       children.add(Text(AppLocalizations.of(context)!.statistics));
       children.add(
-        Table(
-          defaultColumnWidth: const IntrinsicColumnWidth(),
-          children: topList.map((TopListEntry entry) {
-            return TableRow(
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(
-                    right:
-                        8.0, // FIXME: What is the unit here? How will this look on different devices?
-                  ),
-                  child: Text(entry.name),
-                ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                      "${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"),
-                ),
-              ],
-            );
-          }).toList(),
+        // Regarding Expanded + SingleChildScrollView:
+        // https://stackoverflow.com/a/58567624/473672
+        //
+        // FIXME: I would prefer to use Expanded only when the stats table is
+        // high enough to need scrolling.
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Table(
+              defaultColumnWidth: const IntrinsicColumnWidth(),
+              children: topList.map((TopListEntry entry) {
+                return TableRow(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(
+                        right:
+                            8.0, // FIXME: What is the unit here? How will this look on different devices?
+                      ),
+                      child: Text(entry.name),
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                          "${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
         ),
       );
     }
