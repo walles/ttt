@@ -3,6 +3,7 @@
     "start_excl": "Kör!",
     "multiplication": "Multiplikation",
     "division": "Division",
+    "statistics": "Statistik",
     "done_stats": "Du fick {rightOnFirstAttempt} rätt på {totalSeconds} sekunder, eller {perQuestionSeconds} sekunder per svar.",
     "help": "Hjälp",
     "a_game_to_help_you_learn_times_tables": "Ett multiplikationstabellsspel",

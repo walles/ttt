@@ -160,16 +160,13 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         AppLocalizations.of(context)!.multiplication,
         AppLocalizations.of(context)!.division);
     if (topList.isNotEmpty) {
-      // FIXME: Make this look good
       // FIXME: Test this with both light and dark theme
       // FIXME: Test with an empty top list
       // FIXME: Test with a top list that fits on the screen
       // FIXME: Test with a top list that doesn't fit on the screen
 
-      // FIXME: Add a header here?
-      // children.add(const SizedBox(height: 10));
-      // children.add(Text(AppLocalizations.of(context)!.top_list));
       children.add(const SizedBox(height: 10));
+      children.add(Text(AppLocalizations.of(context)!.statistics));
       children.add(
         Table(
           defaultColumnWidth: const IntrinsicColumnWidth(),
