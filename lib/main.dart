@@ -73,6 +73,7 @@ class TttHomeScreen extends StatefulWidget {
 
 class _TttHomeScreenState extends State<TttHomeScreen> {
   bool _running = false;
+  bool _showingStats = false;
   Stats? _stats;
   late LongTermStats _longTermStats;
 
@@ -102,24 +103,48 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     super.dispose();
   }
 
-  Widget _startScreen() {
+  Widget? _lastGameWidget() {
+    if (_stats == null) {
+      return null;
+    }
+
     // Note that we need to explicitly pass the locale to NumberFormat,
     // otherwise we get "." decimal separators even in Swedish.
     final NumberFormat oneDecimal =
         NumberFormat('#0.0', Localizations.localeOf(context).toString());
 
+    double totalDurationSeconds = _stats!.duration.inMilliseconds / 1000.0;
+    String totalDuration = oneDecimal.format(totalDurationSeconds);
+    String perQuestionDuration =
+        oneDecimal.format((totalDurationSeconds / _stats!.rightOnFirstAttempt));
+    String statsText = AppLocalizations.of(context)!.done_stats(
+        _stats!.rightOnFirstAttempt, totalDuration, perQuestionDuration);
+
+    return Text(statsText);
+  }
+
+  Column _toSpacedColumn(List<Widget> children) {
+    List<Widget> spacedChildren = [];
+    for (int i = 0; i < children.length; i++) {
+      if (i > 0) {
+        spacedChildren.add(const SizedBox(height: 10));
+      }
+      spacedChildren.add(children[i]);
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: spacedChildren,
+    );
+  }
+
+  Widget _startScreen() {
     List<Widget> children = [];
-    if (_stats != null) {
-      double totalDurationSeconds = _stats!.duration.inMilliseconds / 1000.0;
-      String totalDuration = oneDecimal.format(totalDurationSeconds);
-      String perQuestionDuration = oneDecimal
-          .format((totalDurationSeconds / _stats!.rightOnFirstAttempt));
-      String statsText = AppLocalizations.of(context)!.done_stats(
-          _stats!.rightOnFirstAttempt, totalDuration, perQuestionDuration);
-
-      children.add(Text(statsText));
-
-      children.add(const SizedBox(height: 10));
+    {
+      Widget? child = _lastGameWidget();
+      if (child != null) {
+        children.add(child);
+      }
     }
 
     children.add(ElevatedButton(
@@ -129,8 +154,6 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
           });
         },
         child: Text(AppLocalizations.of(context)!.start_excl)));
-
-    children.add(const SizedBox(height: 10));
 
     children.add(
       GameConfigWidget(
@@ -155,60 +178,77 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       ),
     );
 
+    return _toSpacedColumn(children);
+  }
+
+  List<Widget> _topListWidgets() {
     List<TopListEntry> topList = _longTermStats.getTopList(
         AppLocalizations.of(context)!.multiplication,
         AppLocalizations.of(context)!.division);
 
     // Having just one line in the top list looks a bit weird, so let's show it
     // when there are at least two entries.
-    if (topList.length >= 2) {
-      children.add(const SizedBox(height: 10));
-      children.add(Text(AppLocalizations.of(context)!.statistics));
-      children.add(
-        // Regarding Expanded + SingleChildScrollView:
-        // https://stackoverflow.com/a/58567624/473672
-        //
-        // FIXME: I would prefer to use Expanded only when the stats table is
-        // high enough to need scrolling.
-        Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Table(
-              defaultColumnWidth: const IntrinsicColumnWidth(),
-              children: topList.map((TopListEntry entry) {
-                return TableRow(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.only(
-                        right:
-                            8.0, // FIXME: What is the unit here? How will this look on different devices?
-                      ),
-                      child: Text(entry.name),
-                    ),
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                          "${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"),
-                    ),
-                  ],
-                );
-              }).toList(),
-            ),
-          ),
-        ),
-      );
+    if (topList.length < 2) {
+      return [];
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: children,
+    // Note that we need to explicitly pass the locale to NumberFormat,
+    // otherwise we get "." decimal separators even in Swedish.
+    final NumberFormat oneDecimal =
+        NumberFormat('#0.0', Localizations.localeOf(context).toString());
+
+    List<Widget> returnMe = [];
+    returnMe.add(Text(AppLocalizations.of(context)!.statistics));
+    returnMe.add(
+      Table(
+        defaultColumnWidth: const IntrinsicColumnWidth(),
+        children: topList.map((TopListEntry entry) {
+          return TableRow(
+            children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(
+                  right:
+                      8.0, // FIXME: What is the unit here? How will this look on different devices?
+                ),
+                child: Text(entry.name),
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                child: Text(
+                    "${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"),
+              ),
+            ],
+          );
+        }).toList(),
+      ),
     );
+
+    return returnMe;
+  }
+
+  Widget _statsScreen() {
+    List<Widget> children = [];
+    {
+      Widget? child = _lastGameWidget();
+      if (child != null) {
+        children.add(child);
+      }
+    }
+
+    children.addAll(_topListWidgets());
+
+    if (children.isEmpty) {
+      return Text(AppLocalizations.of(context)!.play_to_get_stats);
+    }
+
+    return _toSpacedColumn(children);
   }
 
   @override
   Widget build(BuildContext context) {
     Widget child;
+    NavigationBar? navigationBar;
     if (_running) {
       child = Game(
         config: Config(_requestedTables, _multiplication, _division, _duration),
@@ -228,10 +268,34 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         },
       );
     } else {
-      child = _startScreen();
+      if (_showingStats) {
+        child = _statsScreen();
+      } else {
+        child = _startScreen();
+      }
+
+      navigationBar = NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            _showingStats = (index == 1);
+          });
+        },
+        selectedIndex: _showingStats ? 1 : 0,
+        destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.home),
+            label: AppLocalizations.of(context)!.home,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.bar_chart),
+            label: AppLocalizations.of(context)!.statistics,
+          ),
+        ],
+      );
     }
 
     return Scaffold(
+      bottomNavigationBar: navigationBar,
       appBar: AppBar(
         leading: _running
             ? IconButton(

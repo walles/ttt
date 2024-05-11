@@ -4,6 +4,7 @@
     "multiplication": "Multiplication",
     "division": "Division",
     "statistics": "Statistics",
+    "play_to_get_stats": "Play some rounds and come back here for stats!",
     "done_stats": "You got {rightOnFirstAttempt} correct answers in {totalSeconds} seconds at {perQuestionSeconds} seconds per answer.",
     "@done_stats": {
         "placeholders": {
@@ -21,6 +22,7 @@
         }
     },
     "help": "Help",
+    "home": "Home",
     "a_game_to_help_you_learn_times_tables": "A game to help you learn times tables",
     "source_code": "Source code",
     "issues": "Issues",
