@@ -73,6 +73,7 @@ class TttHomeScreen extends StatefulWidget {
 
 class _TttHomeScreenState extends State<TttHomeScreen> {
   bool _running = false;
+  bool _showingStats = false;
   Stats? _stats;
   late LongTermStats _longTermStats;
 
@@ -155,6 +156,35 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       ),
     );
 
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: children,
+    );
+  }
+
+  Widget _statsScreen() {
+    // FIXME: Make sure we always show *something* on this screen, even when
+    // no stats are available.
+
+    // Note that we need to explicitly pass the locale to NumberFormat,
+    // otherwise we get "." decimal separators even in Swedish.
+    final NumberFormat oneDecimal =
+        NumberFormat('#0.0', Localizations.localeOf(context).toString());
+
+    List<Widget> children = [];
+    if (_stats != null) {
+      double totalDurationSeconds = _stats!.duration.inMilliseconds / 1000.0;
+      String totalDuration = oneDecimal.format(totalDurationSeconds);
+      String perQuestionDuration = oneDecimal
+          .format((totalDurationSeconds / _stats!.rightOnFirstAttempt));
+      String statsText = AppLocalizations.of(context)!.done_stats(
+          _stats!.rightOnFirstAttempt, totalDuration, perQuestionDuration);
+
+      children.add(Text(statsText));
+
+      children.add(const SizedBox(height: 10));
+    }
+
     List<TopListEntry> topList = _longTermStats.getTopList(
         AppLocalizations.of(context)!.multiplication,
         AppLocalizations.of(context)!.division);
@@ -165,37 +195,27 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       children.add(const SizedBox(height: 10));
       children.add(Text(AppLocalizations.of(context)!.statistics));
       children.add(
-        // Regarding Expanded + SingleChildScrollView:
-        // https://stackoverflow.com/a/58567624/473672
-        //
-        // FIXME: I would prefer to use Expanded only when the stats table is
-        // high enough to need scrolling.
-        Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Table(
-              defaultColumnWidth: const IntrinsicColumnWidth(),
-              children: topList.map((TopListEntry entry) {
-                return TableRow(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.only(
-                        right:
-                            8.0, // FIXME: What is the unit here? How will this look on different devices?
-                      ),
-                      child: Text(entry.name),
-                    ),
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                          "${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"),
-                    ),
-                  ],
-                );
-              }).toList(),
-            ),
-          ),
+        Table(
+          defaultColumnWidth: const IntrinsicColumnWidth(),
+          children: topList.map((TopListEntry entry) {
+            return TableRow(
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(
+                    right:
+                        8.0, // FIXME: What is the unit here? How will this look on different devices?
+                  ),
+                  child: Text(entry.name),
+                ),
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                      "${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"),
+                ),
+              ],
+            );
+          }).toList(),
         ),
       );
     }
@@ -209,6 +229,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   @override
   Widget build(BuildContext context) {
     Widget child;
+    NavigationBar? navigationBar;
     if (_running) {
       child = Game(
         config: Config(_requestedTables, _multiplication, _division, _duration),
@@ -228,10 +249,34 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         },
       );
     } else {
-      child = _startScreen();
+      if (_showingStats) {
+        child = _statsScreen();
+      } else {
+        child = _startScreen();
+      }
+
+      navigationBar = NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            _showingStats = (index == 1);
+          });
+        },
+        selectedIndex: _showingStats ? 1 : 0,
+        destinations: [
+          const NavigationDestination(
+            icon: Icon(Icons.home),
+            label: "Home", // FIXME: AppLocalizations.of(context)!.home,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.bar_chart),
+            label: AppLocalizations.of(context)!.statistics,
+          ),
+        ],
+      );
     }
 
     return Scaffold(
+      bottomNavigationBar: navigationBar,
       appBar: AppBar(
         leading: _running
             ? IconButton(
