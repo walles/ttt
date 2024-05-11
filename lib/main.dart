@@ -181,14 +181,55 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     return _toSpacedColumn(children);
   }
 
-  Widget _statsScreen() {
-    // FIXME: Make sure we always show *something* on this screen, even when
-    // no stats are available.
+  List<Widget> _topListWidgets() {
+    List<TopListEntry> topList = _longTermStats.getTopList(
+        AppLocalizations.of(context)!.multiplication,
+        AppLocalizations.of(context)!.division);
+
+    // Having just one line in the top list looks a bit weird, so let's show it
+    // when there are at least two entries.
+    if (topList.length < 2) {
+      return [];
+    }
 
     // Note that we need to explicitly pass the locale to NumberFormat,
     // otherwise we get "." decimal separators even in Swedish.
     final NumberFormat oneDecimal =
         NumberFormat('#0.0', Localizations.localeOf(context).toString());
+
+    List<Widget> returnMe = [];
+    returnMe.add(Text(AppLocalizations.of(context)!.statistics));
+    returnMe.add(
+      Table(
+        defaultColumnWidth: const IntrinsicColumnWidth(),
+        children: topList.map((TopListEntry entry) {
+          return TableRow(
+            children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(
+                  right:
+                      8.0, // FIXME: What is the unit here? How will this look on different devices?
+                ),
+                child: Text(entry.name),
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                child: Text(
+                    "${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"),
+              ),
+            ],
+          );
+        }).toList(),
+      ),
+    );
+
+    return returnMe;
+  }
+
+  Widget _statsScreen() {
+    // FIXME: Make sure we always show *something* on this screen, even when
+    // no stats are available.
 
     List<Widget> children = [];
     {
@@ -198,39 +239,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       }
     }
 
-    List<TopListEntry> topList = _longTermStats.getTopList(
-        AppLocalizations.of(context)!.multiplication,
-        AppLocalizations.of(context)!.division);
-
-    // Having just one line in the top list looks a bit weird, so let's show it
-    // when there are at least two entries.
-    if (topList.length >= 2) {
-      children.add(Text(AppLocalizations.of(context)!.statistics));
-      children.add(
-        Table(
-          defaultColumnWidth: const IntrinsicColumnWidth(),
-          children: topList.map((TopListEntry entry) {
-            return TableRow(
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(
-                    right:
-                        8.0, // FIXME: What is the unit here? How will this look on different devices?
-                  ),
-                  child: Text(entry.name),
-                ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                      "${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"),
-                ),
-              ],
-            );
-          }).toList(),
-        ),
-      );
-    }
+    children.addAll(_topListWidgets());
 
     return _toSpacedColumn(children);
   }
