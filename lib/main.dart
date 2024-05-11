@@ -263,9 +263,9 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         },
         selectedIndex: _showingStats ? 1 : 0,
         destinations: [
-          const NavigationDestination(
-            icon: Icon(Icons.home),
-            label: "Home", // FIXME: AppLocalizations.of(context)!.home,
+          NavigationDestination(
+            icon: const Icon(Icons.home),
+            label: AppLocalizations.of(context)!.home,
           ),
           NavigationDestination(
             icon: const Icon(Icons.bar_chart),
