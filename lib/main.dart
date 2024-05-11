@@ -103,24 +103,48 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     super.dispose();
   }
 
-  Widget _startScreen() {
+  Widget? _statsWidget() {
+    if (_stats == null) {
+      return null;
+    }
+
     // Note that we need to explicitly pass the locale to NumberFormat,
     // otherwise we get "." decimal separators even in Swedish.
     final NumberFormat oneDecimal =
         NumberFormat('#0.0', Localizations.localeOf(context).toString());
 
+    double totalDurationSeconds = _stats!.duration.inMilliseconds / 1000.0;
+    String totalDuration = oneDecimal.format(totalDurationSeconds);
+    String perQuestionDuration =
+        oneDecimal.format((totalDurationSeconds / _stats!.rightOnFirstAttempt));
+    String statsText = AppLocalizations.of(context)!.done_stats(
+        _stats!.rightOnFirstAttempt, totalDuration, perQuestionDuration);
+
+    return Text(statsText);
+  }
+
+  Column _toSpacedColumn(List<Widget> children) {
+    List<Widget> spacedChildren = [];
+    for (int i = 0; i < children.length; i++) {
+      if (i > 0) {
+        spacedChildren.add(const SizedBox(height: 10));
+      }
+      spacedChildren.add(children[i]);
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: spacedChildren,
+    );
+  }
+
+  Widget _startScreen() {
     List<Widget> children = [];
-    if (_stats != null) {
-      double totalDurationSeconds = _stats!.duration.inMilliseconds / 1000.0;
-      String totalDuration = oneDecimal.format(totalDurationSeconds);
-      String perQuestionDuration = oneDecimal
-          .format((totalDurationSeconds / _stats!.rightOnFirstAttempt));
-      String statsText = AppLocalizations.of(context)!.done_stats(
-          _stats!.rightOnFirstAttempt, totalDuration, perQuestionDuration);
-
-      children.add(Text(statsText));
-
-      children.add(const SizedBox(height: 10));
+    {
+      Widget? child = _statsWidget();
+      if (child != null) {
+        children.add(child);
+      }
     }
 
     children.add(ElevatedButton(
@@ -130,8 +154,6 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
           });
         },
         child: Text(AppLocalizations.of(context)!.start_excl)));
-
-    children.add(const SizedBox(height: 10));
 
     children.add(
       GameConfigWidget(
@@ -156,10 +178,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       ),
     );
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: children,
-    );
+    return _toSpacedColumn(children);
   }
 
   Widget _statsScreen() {
@@ -172,17 +191,11 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         NumberFormat('#0.0', Localizations.localeOf(context).toString());
 
     List<Widget> children = [];
-    if (_stats != null) {
-      double totalDurationSeconds = _stats!.duration.inMilliseconds / 1000.0;
-      String totalDuration = oneDecimal.format(totalDurationSeconds);
-      String perQuestionDuration = oneDecimal
-          .format((totalDurationSeconds / _stats!.rightOnFirstAttempt));
-      String statsText = AppLocalizations.of(context)!.done_stats(
-          _stats!.rightOnFirstAttempt, totalDuration, perQuestionDuration);
-
-      children.add(Text(statsText));
-
-      children.add(const SizedBox(height: 10));
+    {
+      Widget? child = _statsWidget();
+      if (child != null) {
+        children.add(child);
+      }
     }
 
     List<TopListEntry> topList = _longTermStats.getTopList(
@@ -192,7 +205,6 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     // Having just one line in the top list looks a bit weird, so let's show it
     // when there are at least two entries.
     if (topList.length >= 2) {
-      children.add(const SizedBox(height: 10));
       children.add(Text(AppLocalizations.of(context)!.statistics));
       children.add(
         Table(
@@ -220,10 +232,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       );
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: children,
-    );
+    return _toSpacedColumn(children);
   }
 
   @override
