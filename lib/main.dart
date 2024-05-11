@@ -236,9 +236,13 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       }
     }
 
-    children.addAll(_topListWidgets());
+    var topListWidgets = _topListWidgets();
+    children.addAll(topListWidgets);
 
-    if (children.isEmpty) {
+    if (topListWidgets.isEmpty) {
+      // Even if we have the last-game stats, we don't want people to think
+      // that's the only stats here, so let's have them come back if that's all
+      // they have.
       return Text(AppLocalizations.of(context)!.play_to_get_stats);
     }
 
