@@ -4,6 +4,7 @@
     "multiplication": "Multiplikation",
     "division": "Division",
     "statistics": "Statistik",
+    "play_to_get_stats": "Spela några rundor och kom tillbaks hit för att se statistik!",
     "done_stats": "Du fick {rightOnFirstAttempt} rätt på {totalSeconds} sekunder, eller {perQuestionSeconds} sekunder per svar.",
     "help": "Hjälp",
     "home": "Hem",

@@ -103,7 +103,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     super.dispose();
   }
 
-  Widget? _statsWidget() {
+  Widget? _lastGameWidget() {
     if (_stats == null) {
       return null;
     }
@@ -141,7 +141,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   Widget _startScreen() {
     List<Widget> children = [];
     {
-      Widget? child = _statsWidget();
+      Widget? child = _lastGameWidget();
       if (child != null) {
         children.add(child);
       }
@@ -228,18 +228,19 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
   }
 
   Widget _statsScreen() {
-    // FIXME: Make sure we always show *something* on this screen, even when
-    // no stats are available.
-
     List<Widget> children = [];
     {
-      Widget? child = _statsWidget();
+      Widget? child = _lastGameWidget();
       if (child != null) {
         children.add(child);
       }
     }
 
     children.addAll(_topListWidgets());
+
+    if (children.isEmpty) {
+      return Text(AppLocalizations.of(context)!.play_to_get_stats);
+    }
 
     return _toSpacedColumn(children);
   }
