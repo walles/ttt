@@ -11,25 +11,40 @@ class TopListEntry {
   TopListEntry(this.name, this.duration);
 }
 
-class _StatsEntry {
+@visibleForTesting
+class StatsEntry {
   final Question question;
   final Duration duration;
+  final bool? correct;
+  final DateTime? timestamp;
+  final DateTime? roundStart;
 
-  _StatsEntry(this.question, this.duration);
+  StatsEntry(this.question, this.duration, this.correct, this.timestamp,
+      this.roundStart);
 
   Map<String, dynamic> toJson() => {
         'question': question.toJson(),
         'duration_ms': duration.inMilliseconds,
+        'correct': correct,
+        'timestamp': timestamp?.toIso8601String(),
+        'round_start': roundStart?.toIso8601String(),
       };
 
-  _StatsEntry.fromJson(Map<String, dynamic> json)
+  StatsEntry.fromJson(Map<String, dynamic> json)
       : question = Question.fromJson(json['question']),
-        duration = Duration(milliseconds: json['duration_ms']);
+        duration = Duration(milliseconds: json['duration_ms']),
+        correct = json['correct'],
+        timestamp = json['timestamp'] != null
+            ? DateTime.parse(json['timestamp'])
+            : null,
+        roundStart = json['round_start'] != null
+            ? DateTime.parse(json['round_start'])
+            : null;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is _StatsEntry &&
+      other is StatsEntry &&
           runtimeType == other.runtimeType &&
           question == other.question &&
           duration == other.duration;
@@ -39,7 +54,7 @@ class _StatsEntry {
 }
 
 class LongTermStats {
-  final List<_StatsEntry> _assignments;
+  final List<StatsEntry> _assignments;
 
   LongTermStats() : _assignments = [];
 
@@ -53,8 +68,10 @@ class LongTermStats {
   @override
   int get hashCode => _assignments.hashCode;
 
-  void add(Question question, Duration duration) {
-    _assignments.add(_StatsEntry(question, duration));
+  void add(Question question, Duration duration, bool correct,
+      DateTime timestamp, DateTime roundStart) {
+    _assignments
+        .add(StatsEntry(question, duration, correct, timestamp, roundStart));
     if (_assignments.length > _maxQuestions) {
       _assignments.removeAt(0);
     }
@@ -144,7 +161,7 @@ class LongTermStats {
   LongTermStats.fromJson(Map<String, dynamic> json)
       : _assignments = json.containsKey("assignments")
             ? (json['assignments'] as List<dynamic>)
-                .map((e) => _StatsEntry.fromJson(e))
+                .map((e) => StatsEntry.fromJson(e))
                 .toList()
             : [];
 }
