@@ -43,14 +43,18 @@ void main() {
     expect(deserialized, base);
   });
 
+/**
+ * Verify that we can deserialize a StatsEntry with only question and duration.
+ */
   test("Deserialize old", () {
-    // FIXME: Verify that we can deserialize a StatsEntry with only question and
-    // duration.
+    String json =
+        '{"question": {"a": 2, "b": 3, "operation": "*", "answer": "6"}, "duration_ms": 1234}';
 
-    // NOTE: Consider how we should handle not having the `correct` field when
-    // doing LongTermStats.getTopList().
-
-    fail("Not implemented");
+    var decoded = StatsEntry.fromJson(jsonDecode(json));
+    expect(decoded.question.a, 2);
+    expect(decoded.question.b, 3);
+    expect(decoded.question.operation, Operation.multiplication);
+    expect(decoded.duration, const Duration(milliseconds: 1234));
   });
 
   // We can get just {} from the web browser's local storage, and we should
