@@ -26,8 +26,8 @@ class StatsEntry {
         'question': question.toJson(),
         'duration_ms': duration.inMilliseconds,
         'correct': correct,
-        'timestamp': timestamp?.toIso8601String(),
-        'round_start': roundStart?.toIso8601String(),
+        'timestamp': timestamp?.toUtc().toIso8601String(),
+        'round_start': roundStart?.toUtc().toIso8601String(),
       };
 
   StatsEntry.fromJson(Map<String, dynamic> json)
