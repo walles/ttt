@@ -10,9 +10,12 @@ void main() {
     LongTermStats base = LongTermStats();
 
     Question question = Question.generate({2}, true, false, null);
-    base.add(question, const Duration(seconds: 1));
-    base.add(question, const Duration(seconds: 2));
-    base.add(question, const Duration(seconds: 3));
+    base.add(question, const Duration(seconds: 1), true, DateTime.now(),
+        DateTime.now());
+    base.add(question, const Duration(seconds: 2), true, DateTime.now(),
+        DateTime.now());
+    base.add(question, const Duration(seconds: 3), true, DateTime.now(),
+        DateTime.now());
 
     // For 2x2 we'd get one top list entry for 2. With  2x5 we'd get another one
     // for 5 as well. So either one or two entries are fine.
@@ -28,13 +31,26 @@ void main() {
     LongTermStats base = LongTermStats();
 
     Question question = Question.generate({2}, true, false, null);
-    base.add(question, const Duration(seconds: 1));
-    base.add(question, const Duration(seconds: 2));
-    base.add(question, const Duration(seconds: 3));
+    base.add(question, const Duration(seconds: 1), true, DateTime.now(),
+        DateTime.now());
+    base.add(question, const Duration(seconds: 2), false, DateTime.now(),
+        DateTime.now());
+    base.add(question, const Duration(seconds: 3), true, DateTime.now(),
+        DateTime.now());
 
     String json = jsonEncode(base);
     LongTermStats deserialized = LongTermStats.fromJson(jsonDecode(json));
     expect(deserialized, base);
+  });
+
+  test("Deserialize old", () {
+    // FIXME: Verify that we can deserialize a StatsEntry with only question and
+    // duration.
+
+    // NOTE: Consider how we should handle not having the `correct` field when
+    // doing LongTermStats.getTopList().
+
+    fail("Not implemented");
   });
 
   // We can get just {} from the web browser's local storage, and we should

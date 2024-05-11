@@ -40,6 +40,8 @@ class _GameState extends State<Game> {
 
   final TextEditingController _controller = TextEditingController();
 
+  final DateTime _roundStart = DateTime.now();
+
   void _initState() {
     setState(() {
       _countingDown = false;
@@ -72,7 +74,11 @@ class _GameState extends State<Game> {
       }
 
       widget.onQuestionAnswered(
-          _question!, DateTime.now().difference(_questionStartTime));
+          _question!,
+          DateTime.now().difference(_questionStartTime),
+          !_currentHasBeenWrong,
+          _questionStartTime,
+          _roundStart);
 
       var gameDuration = DateTime.now().difference(_gameStartTime);
       if (gameDuration > widget.duration) {
@@ -193,7 +199,8 @@ class Game extends StatefulWidget {
   final Duration duration;
 
   final EffectsPlayer effectsPlayer;
-  final Function(Question question, Duration duration) onQuestionAnswered;
+  final Function(Question question, Duration duration, bool correct,
+      DateTime timestamp, DateTime roundStart) onQuestionAnswered;
   final Function(Stats stats) onDone;
 
   @override

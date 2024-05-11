@@ -263,9 +263,11 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
             _stats = stats;
           });
         },
-        onQuestionAnswered: (Question question, Duration duration) {
+        onQuestionAnswered: (Question question, Duration duration, bool correct,
+            DateTime timestamp, DateTime roundStart) {
           // FIXME: Do this in a setState() block?
-          _longTermStats.add(question, duration);
+          _longTermStats.add(
+              question, duration, correct, timestamp, roundStart);
 
           // Persist the new state
           GetStorage().write(longTermStatsKey, _longTermStats);
