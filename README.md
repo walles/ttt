@@ -9,7 +9,6 @@ Try here: <https://walles.github.io/ttt>
 ### Random improvements
 
 * Make an icon
-* Present stats on the home screen, based on `LongTermStats.getTopList()`
 * Collect high scores
   * Individual high score tables based on tables / multiplication / division
     settings
@@ -59,3 +58,4 @@ Try here: <https://walles.github.io/ttt>
   before starting the questions
 * Add a sound effect
 * Collect stats on the last 50 questions
+* Present stats on the home screen, based on `LongTermStats.getTopList()`
