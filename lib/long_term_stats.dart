@@ -118,6 +118,21 @@ class LongTermStats {
     // Sort the list by duration, longest first
     topList.sort((a, b) => b.duration.compareTo(a.duration));
 
+    // Limit to five entries, but multiplication and division should always be
+    // kept.
+    while (topList.length > 5) {
+      // Iterate from the end of the list to find a removal candidate
+      for (var i = topList.length - 1; i >= 0; i--) {
+        if (topList[i].name == multiplication || topList[i].name == division) {
+          // Don't remove multiplication or division
+          continue;
+        }
+
+        topList.removeAt(i);
+        break;
+      }
+    }
+
     return topList;
   }
 
