@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:ttt/question.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ttt/streak.dart';
 
 const _maxQuestions = 50;
 
@@ -58,6 +59,7 @@ class StatsEntry {
 
 class LongTermStats {
   final List<StatsEntry> _assignments;
+  Streak? _streak;
 
   LongTermStats() : _assignments = [];
 
@@ -77,6 +79,13 @@ class LongTermStats {
         .add(StatsEntry(question, duration, correct, timestamp, roundStart));
     if (_assignments.length > _maxQuestions) {
       _assignments.removeAt(0);
+    }
+
+    // Update the streak
+    if (_streak == null) {
+      _streak = Streak();
+    } else {
+      _streak!.update(timestamp);
     }
   }
 
@@ -217,9 +226,28 @@ class LongTermStats {
         oneDecimal.format(hardest.value.inMilliseconds / 1000.0));
   }
 
+  String getStreak(BuildContext context) {
+    if (_streak == null) {
+      return AppLocalizations.of(context)!.streak_play_to_start_a_new_one;
+    }
+
+    if (_streak!.length() == 0) {
+      return AppLocalizations.of(context)!.streak_play_to_start_a_new_one;
+    }
+
+    if (_streak!.playedToday()) {
+      return AppLocalizations.of(context)!
+          .streak_you_have_an_n_day_streak(_streak!.length());
+    }
+
+    return AppLocalizations.of(context)!
+        .streak_play_today_to_extend(_streak!.length(), _streak!.length() + 1);
+  }
+
   Map<String, dynamic> toJson() => {
         'assignments':
             _assignments.map((e) => e.toJson()).toList(growable: false),
+        'streak': _streak?.toJson(),
       };
 
   LongTermStats.fromJson(Map<String, dynamic> json)
@@ -227,5 +255,7 @@ class LongTermStats {
             ? (json['assignments'] as List<dynamic>)
                 .map((e) => StatsEntry.fromJson(e))
                 .toList()
-            : [];
+            : [],
+        _streak =
+            json["streak"] != null ? Streak.fromJson(json['streak']) : null;
 }

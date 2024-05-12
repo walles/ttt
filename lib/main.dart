@@ -147,6 +147,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       }
     }
 
+    children.add(Text(_longTermStats.getStreak(context)));
+
     children.add(ElevatedButton(
         onPressed: () {
           setState(() {
@@ -229,6 +231,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
 
   Widget _statsScreen() {
     List<Widget> children = [];
+
+    children.add(Text(_longTermStats.getStreak(context)));
 
     children.add(Text(_longTermStats.getTodayStats(context)));
 
