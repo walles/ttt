@@ -5,7 +5,7 @@ class Streak {
   /// [DateUtils.dateOnly].
   DateTime _mostRecentDay;
 
-  /// Including the most recent day
+  /// Including the most recent day. Always at least 1.
   int _streakLength;
 
   Streak()
@@ -26,13 +26,40 @@ class Streak {
 
   void update(DateTime timestamp) {
     DateTime day = DateUtils.dateOnly(timestamp);
-    if (day.isAfter(_mostRecentDay)) {
-      if (day.difference(_mostRecentDay).inDays == 1) {
-        _streakLength++;
-      } else {
-        _streakLength = 1;
-      }
-      _mostRecentDay = day;
+    if (!day.isAfter(_mostRecentDay)) {
+      // Already updated for today
+      return;
     }
+
+    final playedYesterday = day.difference(_mostRecentDay).inDays == 1;
+    if (playedYesterday) {
+      // Played yesterday, streak is extended
+      _streakLength++;
+    } else {
+      // Did not play yesterday, start a new streak
+      _streakLength = 1;
+    }
+
+    _mostRecentDay = day;
+  }
+
+  bool playedToday() {
+    return DateUtils.dateOnly(DateTime.now()).isAtSameMomentAs(_mostRecentDay);
+  }
+
+  int length() {
+    if (playedToday()) {
+      return _streakLength;
+    }
+
+    final playedYesterday =
+        DateUtils.dateOnly(DateTime.now().subtract(const Duration(days: 1)))
+            .isAtSameMomentAs(_mostRecentDay);
+    if (playedYesterday) {
+      return _streakLength;
+    }
+
+    // The streak was broken
+    return 0;
   }
 }

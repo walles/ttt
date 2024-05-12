@@ -226,6 +226,24 @@ class LongTermStats {
         oneDecimal.format(hardest.value.inMilliseconds / 1000.0));
   }
 
+  String getStreak(BuildContext context) {
+    if (_streak == null) {
+      return AppLocalizations.of(context)!.streak_play_to_start_a_new_one;
+    }
+
+    if (_streak!.length() == 0) {
+      return AppLocalizations.of(context)!.streak_play_to_start_a_new_one;
+    }
+
+    if (_streak!.playedToday()) {
+      return AppLocalizations.of(context)!
+          .streak_you_have_an_n_day_streak(_streak!.length());
+    }
+
+    return AppLocalizations.of(context)!
+        .streak_play_today_to_extend(_streak!.length(), _streak!.length() + 1);
+  }
+
   Map<String, dynamic> toJson() => {
         'assignments':
             _assignments.map((e) => e.toJson()).toList(growable: false),
