@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:ttt/question.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ttt/streak.dart';
 
 const _maxQuestions = 50;
 
@@ -58,6 +59,7 @@ class StatsEntry {
 
 class LongTermStats {
   final List<StatsEntry> _assignments;
+  Streak? _streak;
 
   LongTermStats() : _assignments = [];
 
@@ -77,6 +79,13 @@ class LongTermStats {
         .add(StatsEntry(question, duration, correct, timestamp, roundStart));
     if (_assignments.length > _maxQuestions) {
       _assignments.removeAt(0);
+    }
+
+    // Update the streak
+    if (_streak == null) {
+      _streak = Streak();
+    } else {
+      _streak!.update(timestamp);
     }
   }
 
@@ -220,6 +229,7 @@ class LongTermStats {
   Map<String, dynamic> toJson() => {
         'assignments':
             _assignments.map((e) => e.toJson()).toList(growable: false),
+        'streak': _streak?.toJson(),
       };
 
   LongTermStats.fromJson(Map<String, dynamic> json)
@@ -227,5 +237,7 @@ class LongTermStats {
             ? (json['assignments'] as List<dynamic>)
                 .map((e) => StatsEntry.fromJson(e))
                 .toList()
-            : [];
+            : [],
+        _streak =
+            json["streak"] != null ? Streak.fromJson(json['streak']) : null;
 }
