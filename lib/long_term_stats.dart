@@ -5,7 +5,7 @@ import 'package:ttt/question.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ttt/streak.dart';
 
-const _maxQuestions = 50;
+const _maxQuestions = 150;
 
 class TopListEntry {
   final String name;
