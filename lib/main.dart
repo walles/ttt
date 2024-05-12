@@ -232,8 +232,12 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
 
     children.add(Text(_longTermStats.getTodayStats(context)));
 
-    var topListWidgets = _topListWidgets();
-    children.addAll(topListWidgets);
+    String? todaysHardest = _longTermStats.getTodaysHardest(context);
+    if (todaysHardest != null) {
+      children.add(Text(todaysHardest));
+    }
+
+    children.addAll(_topListWidgets());
 
     return _toSpacedColumn(children);
   }
