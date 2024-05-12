@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:ttt/question.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -155,28 +156,65 @@ class LongTermStats {
     return topList;
   }
 
-  /// "Today you spent 3m11s on 20 assignments over 3 rounds."
-  String getTodayStats(BuildContext context) {
+  List<StatsEntry> _assignmentsToday() {
     final today = DateTime.now();
-    final assignmentsToday = _assignments
+    return _assignments
         .where((element) =>
             element.timestamp != null &&
             element.timestamp!.day == today.day &&
             element.timestamp!.month == today.month &&
             element.timestamp!.year == today.year)
         .toList();
-    final rounds = assignmentsToday
+  }
+
+  /// "Today you spent 3m11s on 20 assignments over 3 rounds."
+  String getTodayStats(BuildContext context) {
+    final assignments = _assignmentsToday();
+    final rounds = assignments
         .map((e) => e.roundStart)
         .toSet()
         // roundStart can be null for old stats
         .where((element) => element != null)
         .length;
-    final totalDuration = assignmentsToday.map((e) => e.duration).fold(
+    final totalDuration = assignments.map((e) => e.duration).fold(
         Duration.zero, (previousValue, element) => previousValue + element);
 
     // "Today you spent 3m11s on 20 assignments over 3 rounds."
-    return AppLocalizations.of(context)!.today_stats(assignmentsToday.length,
+    return AppLocalizations.of(context)!.today_stats(assignments.length,
         totalDuration.inMinutes, rounds, totalDuration.inSeconds % 60);
+  }
+
+  /// "Today's hardest question was 3x4=12, which took you 5.3s at best."
+  ///
+  /// If there are no assignments today, return null.
+  String? getTodaysHardest(BuildContext context) {
+    final assignments = _assignmentsToday();
+    if (assignments.isEmpty) {
+      return null;
+    }
+
+    // Figure out the fastest time for each assignment
+    final fastestTime = <Question, Duration>{};
+    for (final assignment in assignments) {
+      final current = fastestTime[assignment.question];
+      if (current == null || assignment.duration < current) {
+        fastestTime[assignment.question] = assignment.duration;
+      }
+    }
+
+    // Find the hardest question
+    final hardest =
+        fastestTime.entries.reduce((a, b) => a.value > b.value ? a : b);
+
+    // Note that we need to explicitly pass the locale to NumberFormat,
+    // otherwise we get "." decimal separators even in Swedish.
+    final NumberFormat oneDecimal =
+        NumberFormat('#0.0', Localizations.localeOf(context).toString());
+
+    // "Today's hardest question was 3x4=12, which took you 5.3s at best."
+    return AppLocalizations.of(context)!.todays_hardest(
+        hardest.key.getQuestionText() + hardest.key.answer,
+        oneDecimal.format(hardest.value.inMilliseconds / 1000.0));
   }
 
   Map<String, dynamic> toJson() => {
