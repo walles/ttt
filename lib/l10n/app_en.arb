@@ -4,8 +4,8 @@
     "multiplication": "Multiplication",
     "division": "Division",
     "statistics": "Statistics",
-    "play_to_get_stats": "Play some rounds and come back here for stats!",
     "done_stats": "You got {rightOnFirstAttempt} correct answers in {totalSeconds} seconds at {perQuestionSeconds} seconds per answer.",
+    "today_stats": "Today you spent {minutes}m{seconds}s on {assignmentsTodayCount} assignments over {rounds} rounds.",
     "@done_stats": {
         "placeholders": {
             "rightOnFirstAttempt": {

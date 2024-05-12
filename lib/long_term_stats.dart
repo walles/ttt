@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ttt/question.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const _maxQuestions = 50;
 
@@ -151,6 +153,30 @@ class LongTermStats {
     }
 
     return topList;
+  }
+
+  /// "Today you spent 3m11s on 20 assignments over 3 rounds."
+  String getTodayStats(BuildContext context) {
+    final today = DateTime.now();
+    final assignmentsToday = _assignments
+        .where((element) =>
+            element.timestamp != null &&
+            element.timestamp!.day == today.day &&
+            element.timestamp!.month == today.month &&
+            element.timestamp!.year == today.year)
+        .toList();
+    final rounds = assignmentsToday
+        .map((e) => e.roundStart)
+        .toSet()
+        // roundStart can be null for old stats
+        .where((element) => element != null)
+        .length;
+    final totalDuration = assignmentsToday.map((e) => e.duration).fold(
+        Duration.zero, (previousValue, element) => previousValue + element);
+
+    // "Today you spent 3m11s on 20 assignments over 3 rounds."
+    return AppLocalizations.of(context)!.today_stats(assignmentsToday.length,
+        totalDuration.inMinutes, rounds, totalDuration.inSeconds % 60);
   }
 
   Map<String, dynamic> toJson() => {
