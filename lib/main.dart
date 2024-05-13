@@ -123,7 +123,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     return Text(statsText);
   }
 
-  Column _toSpacedColumn(List<Widget> children) {
+  Widget _toSpacedColumn(List<Widget> children) {
     List<Widget> spacedChildren = [];
     for (int i = 0; i < children.length; i++) {
       if (i > 0) {
@@ -132,9 +132,11 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
       spacedChildren.add(children[i]);
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: spacedChildren,
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: spacedChildren,
+      ),
     );
   }
 
