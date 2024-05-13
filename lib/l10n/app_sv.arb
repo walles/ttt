@@ -4,6 +4,7 @@
     "multiplication": "Multiplikation",
     "division": "Division",
     "statistics": "Statistik",
+    "statistics_count": "Statistik baserad på {count} svar",
     "done_stats": "Du fick {rightOnFirstAttempt} rätt på {totalSeconds} sekunder, eller {perQuestionSeconds} sekunder per svar.",
     "today_stats": "I dag har du spenderat {minutes}m{seconds}s på {assignmentsTodayCount} uppgifter fördelat på {rounds} rundor.",
     "todays_hardest": "Dagens svåraste fråga var {question_with_answer}. Som bäst tog den dig {seconds}s.",

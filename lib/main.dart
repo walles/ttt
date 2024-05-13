@@ -200,7 +200,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         NumberFormat('#0.0', Localizations.localeOf(context).toString());
 
     List<Widget> returnMe = [];
-    returnMe.add(Text(AppLocalizations.of(context)!.statistics));
+    returnMe.add(Text(
+        AppLocalizations.of(context)!.statistics_count(_longTermStats.length)));
     returnMe.add(
       Table(
         defaultColumnWidth: const IntrinsicColumnWidth(),

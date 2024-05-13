@@ -73,6 +73,8 @@ class LongTermStats {
   @override
   int get hashCode => _assignments.hashCode;
 
+  int get length => _assignments.length;
+
   void add(Question question, Duration duration, bool correct,
       DateTime timestamp, DateTime roundStart) {
     _assignments
