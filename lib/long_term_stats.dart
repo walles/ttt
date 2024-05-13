@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ttt/question.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -77,7 +77,16 @@ class LongTermStats {
       DateTime timestamp, DateTime roundStart) {
     _assignments
         .add(StatsEntry(question, duration, correct, timestamp, roundStart));
-    if (_assignments.length > _maxQuestions) {
+
+    final midnight = DateUtils.dateOnly(DateTime.now());
+    while (_assignments.length > _maxQuestions) {
+      final candidate = _assignments.first;
+      if (candidate.timestamp != null &&
+          candidate.timestamp!.isAfter(midnight)) {
+        // Don't remove any info from today
+        break;
+      }
+
       _assignments.removeAt(0);
     }
 
