@@ -46,5 +46,5 @@ class Question {
             ? Operation.multiplication
             : Operation.division,
         b = json['b'],
-        answer = json['answer'];
+        answer = int.parse(json['answer'].toString());
 }
