@@ -25,6 +25,7 @@ class Question {
     return a.hashCode ^ operation.hashCode ^ b.hashCode ^ answer.hashCode;
   }
 
+  /// "5×7="
   String getQuestionText() {
     if (operation == Operation.multiplication) {
       return "$a×$b=";

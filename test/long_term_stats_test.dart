@@ -19,10 +19,11 @@ void main() {
         DateTime.now());
 
     // For 2x2 we'd get one top list entry for 2. With  2x5 we'd get another one
-    // for 5 as well. So either one or two entries are fine.
+    // for 5 as well. And in either case, we'll get one entry for the full
+    // question. So either two or three entries are fine.
     var topList = base.getTopList("multiplication", "division");
-    expect(topList.isNotEmpty, true);
-    expect(topList.length <= 2, true);
+    expect(topList.length >= 2, true);
+    expect(topList.length <= 3, true);
     for (var entry in topList) {
       expect(entry.duration, const Duration(seconds: 2));
     }

@@ -144,6 +144,10 @@ class LongTermStats {
           .putIfAbsent(assignment.question.b.toString(), () => [])
           .add(assignment.duration);
 
+      final qna = assignment.question.getQuestionText() +
+          assignment.question.answer.toString();
+      durations.putIfAbsent(qna, () => []).add(assignment.duration);
+
       final opName = assignment.question.operation == Operation.multiplication
           ? multiplication
           : division;
