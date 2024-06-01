@@ -1,4 +1,5 @@
-import 'dart:math';
+import 'dart:developer';
+import 'dart:math' hide log;
 
 import 'package:ttt/question.dart';
 
@@ -59,6 +60,7 @@ class QuestionSpec {
     while (true) {
       Question q = pick(_allPossibleQuestions());
       if (q != notThisOne) {
+        log("Random question: $q");
         return q;
       }
     }
