@@ -20,6 +20,9 @@ class QuestionGenerator {
     // We should make a focus question
 
     final focusCandidates = stats.getFocusCandidates(spec);
+    if (notThisOne != null) {
+      focusCandidates.remove(notThisOne);
+    }
 
     // If we have no focus candidates, then just generate a random question
     if (focusCandidates.isEmpty) {
