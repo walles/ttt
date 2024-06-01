@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ttt/countdown_widget.dart';
 import 'package:ttt/effects_player.dart';
+import 'package:ttt/long_term_stats.dart';
 import 'package:ttt/question.dart';
+import 'package:ttt/question_generator.dart';
 import 'package:ttt/question_spec.dart';
 import 'package:ttt/stats.dart';
 
@@ -91,7 +93,8 @@ class _GameState extends State<Game> {
 
   void _generateQuestion() {
     setState(() {
-      _question = widget.questionSpec.generate(_question);
+      _question = widget._questionGenerator
+          .generate(widget.questionSpec, widget.stats, _question);
       _currentHasBeenWrong = false;
       _currentIsOnTheRightTrack = true;
 
@@ -185,17 +188,21 @@ class _GameState extends State<Game> {
 }
 
 class Game extends StatefulWidget {
-  const Game({
+  Game({
     super.key,
     required this.questionSpec,
     required duration,
+    required this.stats,
     required this.effectsPlayer,
     required this.onQuestionAnswered,
     required this.onDone,
   }) : duration = kDebugMode ? const Duration(seconds: 10) : duration;
 
+  final QuestionGenerator _questionGenerator = QuestionGenerator();
+
   final QuestionSpec questionSpec;
   final Duration duration;
+  final LongTermStats stats;
 
   final EffectsPlayer effectsPlayer;
   final Function(Question question, Duration duration, bool correct,

@@ -259,6 +259,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         questionSpec:
             QuestionSpec(_requestedTables, _multiplication, _division),
         duration: _duration,
+        stats: _longTermStats,
         effectsPlayer: _effectsPlayer,
         onDone: (Stats stats) {
           setState(() {
