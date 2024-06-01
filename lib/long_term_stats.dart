@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ttt/question.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ttt/question_spec.dart';
 import 'package:ttt/streak.dart';
 
 const _maxQuestions = 150;
@@ -75,6 +76,24 @@ class LongTermStats {
 
   int get length => _assignments.length;
 
+  static _median(List<Duration> durations) {
+    if (durations.isEmpty) {
+      throw ArgumentError("Cannot calculate median of empty list");
+    }
+
+    final sorted = List<Duration>.from(durations)..sort();
+    if (sorted.length.isOdd) {
+      return sorted[(sorted.length - 1) ~/ 2];
+    }
+
+    final beforeMidpoint = sorted.length ~/ 2 - 1;
+    final afterMidpoint = sorted.length ~/ 2;
+    final averageMs = (sorted[beforeMidpoint].inMilliseconds +
+            sorted[afterMidpoint].inMilliseconds) /
+        2;
+    return Duration(milliseconds: averageMs.round());
+  }
+
   void add(Question question, Duration duration, bool correct,
       DateTime timestamp, DateTime roundStart) {
     _assignments
@@ -146,13 +165,7 @@ class LongTermStats {
     final List<TopListEntry> topList = [];
     for (final entry in durations.entries) {
       final durations = entry.value;
-      durations.sort();
-      var midPoint = durations.length ~/ 2;
-      final medianMs = durations.length % 2 == 0
-          ? (durations[midPoint - 1] + durations[midPoint]).inMilliseconds / 2
-          : durations[midPoint].inMilliseconds;
-      topList.add(
-          TopListEntry(entry.key, Duration(milliseconds: medianMs.floor())));
+      topList.add(TopListEntry(entry.key, _median(durations)));
     }
 
     // Sort the list by duration, longest first
@@ -174,6 +187,29 @@ class LongTermStats {
     }
 
     return topList;
+  }
+
+  /// Returns a map of questions to the median response time of that question.
+  Map<Question, Duration> getFocusCandidates(QuestionSpec spec) {
+    // Collect all durations for all questions matching the spec
+    final Map<Question, List<Duration>> durationsPerQuestion = {};
+    for (final assignment in _assignments) {
+      if (!spec.matches(assignment.question)) {
+        continue;
+      }
+
+      durationsPerQuestion
+          .putIfAbsent(assignment.question, () => [])
+          .add(assignment.duration);
+    }
+
+    final Map<Question, Duration> focusCandidates = {};
+    for (final entry in durationsPerQuestion.entries) {
+      final durations = entry.value;
+      focusCandidates[entry.key] = _median(durations);
+    }
+
+    return focusCandidates;
   }
 
   List<StatsEntry> _assignmentsToday() {
@@ -233,7 +269,7 @@ class LongTermStats {
 
     // "Today's hardest question was 3x4=12, which took you 5.3s at best."
     return AppLocalizations.of(context)!.todays_hardest(
-        hardest.key.getQuestionText() + hardest.key.answer,
+        hardest.key.getQuestionText() + hardest.key.answer.toString(),
         oneDecimal.format(hardest.value.inMilliseconds / 1000.0));
   }
 

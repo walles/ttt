@@ -4,12 +4,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ttt/long_term_stats.dart';
 
 import 'package:ttt/question.dart';
+import 'package:ttt/question_spec.dart';
 
 void main() {
   test("Top List generation", () {
     LongTermStats base = LongTermStats();
 
-    Question question = Question.generate({2}, true, false, null);
+    Question question = QuestionSpec({2}, true, false).generate(null);
     base.add(question, const Duration(seconds: 1), true, DateTime.now(),
         DateTime.now());
     base.add(question, const Duration(seconds: 2), true, DateTime.now(),
@@ -30,7 +31,7 @@ void main() {
   test("JSON (de)serialization", () {
     LongTermStats base = LongTermStats();
 
-    Question question = Question.generate({2}, true, false, null);
+    Question question = QuestionSpec({2}, true, false).generate(null);
     base.add(question, const Duration(seconds: 1), true, DateTime.now(),
         DateTime.now());
     base.add(question, const Duration(seconds: 2), false, DateTime.now(),
