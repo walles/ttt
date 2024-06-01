@@ -140,9 +140,11 @@ class LongTermStats {
       durations
           .putIfAbsent(assignment.question.a.toString(), () => [])
           .add(assignment.duration);
-      durations
-          .putIfAbsent(assignment.question.b.toString(), () => [])
-          .add(assignment.duration);
+      if (assignment.question.b != assignment.question.a) {
+        durations
+            .putIfAbsent(assignment.question.b.toString(), () => [])
+            .add(assignment.duration);
+      }
 
       final qna = assignment.question.getQuestionText() +
           assignment.question.answer.toString();
