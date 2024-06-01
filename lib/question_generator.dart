@@ -43,6 +43,7 @@ class QuestionGenerator {
       }
     }
     if (slowestDurationMs < 2 * fastestDurationMs) {
+      log("Slowest question (${slowestDurationMs}ms) is not at least 2x slower than fastest question (${fastestDurationMs}ms), falling back on random questions");
       return spec.generate(notThisOne);
     }
 

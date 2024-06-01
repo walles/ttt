@@ -33,6 +33,11 @@ class Question {
     }
   }
 
+  @override
+  String toString() {
+    return "Question: <${getQuestionText()}$answer>";
+  }
+
   Map<String, dynamic> toJson() => {
         'a': a,
         'operation': operation == Operation.multiplication ? '*' : '/',
