@@ -8,6 +8,7 @@ import 'package:ttt/game.dart';
 import 'package:ttt/help_dialog.dart';
 import 'package:ttt/long_term_stats.dart';
 import 'package:ttt/question.dart';
+import 'package:ttt/question_spec.dart';
 import 'package:ttt/stats.dart';
 import 'package:ttt/game_config_widget.dart';
 
@@ -255,7 +256,9 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     NavigationBar? navigationBar;
     if (_running) {
       child = Game(
-        config: Config(_requestedTables, _multiplication, _division, _duration),
+        questionSpec:
+            QuestionSpec(_requestedTables, _multiplication, _division),
+        duration: _duration,
         effectsPlayer: _effectsPlayer,
         onDone: (Stats stats) {
           setState(() {

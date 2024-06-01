@@ -233,7 +233,7 @@ class LongTermStats {
 
     // "Today's hardest question was 3x4=12, which took you 5.3s at best."
     return AppLocalizations.of(context)!.todays_hardest(
-        hardest.key.getQuestionText() + hardest.key.answer,
+        hardest.key.getQuestionText() + hardest.key.answer.toString(),
         oneDecimal.format(hardest.value.inMilliseconds / 1000.0));
   }
 

@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ttt/config.dart';
 import 'package:ttt/countdown_widget.dart';
 import 'package:ttt/effects_player.dart';
 import 'package:ttt/question.dart';
+import 'package:ttt/question_spec.dart';
 import 'package:ttt/stats.dart';
 
 /// We want the user to be this quick or better at all questions
@@ -91,9 +91,7 @@ class _GameState extends State<Game> {
 
   void _generateQuestion() {
     setState(() {
-      final c = widget.config;
-      _question = Question.generate(
-          c.tablesToTest, c.multiplication, c.division, _question);
+      _question = widget.questionSpec.generate(_question);
       _currentHasBeenWrong = false;
       _currentIsOnTheRightTrack = true;
 
@@ -116,7 +114,7 @@ class _GameState extends State<Game> {
       return CountdownWidget(onFinished: _initState);
     }
 
-    String? hintText = _tooSlow ? _question!.answer : null;
+    String? hintText = _tooSlow ? _question!.answer.toString() : null;
 
     InputDecoration inputDecoration;
     if (_currentIsOnTheRightTrack) {
@@ -158,13 +156,13 @@ class _GameState extends State<Game> {
                     LengthLimitingTextInputFormatter("100".length),
                   ],
                   onChanged: (text) {
-                    if (text == _question!.answer) {
+                    if (text == _question!.answer.toString()) {
                       widget.effectsPlayer.playDing();
                       _controller.clear();
                       _nextQuestion();
                       return;
                     }
-                    if (_question!.answer.startsWith(text)) {
+                    if (_question!.answer.toString().startsWith(text)) {
                       setState(() {
                         _currentIsOnTheRightTrack = true;
                       });
@@ -187,15 +185,16 @@ class _GameState extends State<Game> {
 }
 
 class Game extends StatefulWidget {
-  Game({
+  const Game({
     super.key,
-    required this.config,
+    required this.questionSpec,
+    required duration,
     required this.effectsPlayer,
     required this.onQuestionAnswered,
     required this.onDone,
-  }) : duration = kDebugMode ? const Duration(seconds: 10) : config.duration;
+  }) : duration = kDebugMode ? const Duration(seconds: 10) : duration;
 
-  final Config config;
+  final QuestionSpec questionSpec;
   final Duration duration;
 
   final EffectsPlayer effectsPlayer;
