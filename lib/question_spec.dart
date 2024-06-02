@@ -47,22 +47,17 @@ class QuestionSpec {
     return true;
   }
 
-  Question pick(List<Question> pile) {
-    List<Question> matching = pile.where((q) => matches(q)).toList();
-    if (matching.isEmpty) {
-      throw ArgumentError("No matching questions in pile.");
-    }
-
-    return matching[_random.nextInt(matching.length)];
-  }
-
   Question generate(Question? notThisOne) {
-    while (true) {
-      Question q = pick(_allPossibleQuestions());
-      if (q != notThisOne) {
-        log("Random question: $q");
-        return q;
-      }
+    final candidates =
+        _allPossibleQuestions().where((q) => matches(q)).toList();
+    candidates.remove(notThisOne);
+
+    if (candidates.isEmpty) {
+      throw ArgumentError("No question candidates");
     }
+
+    Question q = candidates[_random.nextInt(candidates.length)];
+    log("Random question: $q");
+    return q;
   }
 }
