@@ -6,7 +6,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ttt/question_spec.dart';
 import 'package:ttt/streak.dart';
 
-const _maxQuestions = 150;
+const _maxStatEntries = 150;
+const _maxTopListLength = 10;
 
 class TopListEntry {
   final String name;
@@ -100,7 +101,7 @@ class LongTermStats {
         .add(StatsEntry(question, duration, correct, timestamp, roundStart));
 
     final midnight = DateUtils.dateOnly(DateTime.now());
-    while (_assignments.length > _maxQuestions) {
+    while (_assignments.length > _maxStatEntries) {
       final candidate = _assignments.first;
       if (candidate.timestamp != null &&
           candidate.timestamp!.isAfter(midnight)) {
@@ -119,7 +120,7 @@ class LongTermStats {
     }
   }
 
-  /// A top list of at most five entries.
+  /// A top list of at most `_maxTopListLength` entries.
   ///
   /// The duration of each entry is the median of the durations of the
   /// assignments in that category.
@@ -179,7 +180,7 @@ class LongTermStats {
 
     // Limit to five entries, but multiplication and division should always be
     // kept.
-    while (topList.length > 5) {
+    while (topList.length > _maxTopListLength) {
       // Iterate from the end of the list to find a removal candidate
       for (var i = topList.length - 1; i >= 0; i--) {
         if (topList[i].name == multiplication || topList[i].name == division) {
