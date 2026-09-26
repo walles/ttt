@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:math' hide log;
-
 import 'package:ttt/question.dart';
 
 class QuestionSpec {
@@ -12,8 +9,6 @@ class QuestionSpec {
 
   /// Do we want division questions?
   final bool division;
-
-  final Random _random = Random();
 
   QuestionSpec(this.tablesToTest, this.multiplication, this.division) {
     if (!multiplication && !division) {
@@ -50,19 +45,5 @@ class QuestionSpec {
   /// All questions matching this spec
   List<Question> allMatching() {
     return _allPossibleQuestions().where((q) => matches(q)).toList();
-  }
-
-  Question generate(Question? notThisOne) {
-    final candidates =
-        _allPossibleQuestions().where((q) => matches(q)).toList();
-    candidates.remove(notThisOne);
-
-    if (candidates.isEmpty) {
-      throw ArgumentError("No question candidates");
-    }
-
-    Question q = candidates[_random.nextInt(candidates.length)];
-    log("Random question: $q");
-    return q;
   }
 }
