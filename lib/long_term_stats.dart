@@ -79,7 +79,9 @@ class StatsEntry {
 }
 
 class LongTermStats {
+  /// All remembered answers in the order they were given, oldest first
   final List<StatsEntry> _assignments;
+
   Streak? _streak;
 
   LongTermStats() : _assignments = [];
