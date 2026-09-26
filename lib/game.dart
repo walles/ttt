@@ -44,6 +44,8 @@ class _GameState extends State<Game> {
 
   final DateTime _roundStart = DateTime.now();
 
+  final QuestionGenerator _questionGenerator = QuestionGenerator();
+
   void _initState() {
     setState(() {
       _countingDown = false;
@@ -93,8 +95,8 @@ class _GameState extends State<Game> {
 
   void _generateQuestion() {
     setState(() {
-      _question = widget._questionGenerator
-          .generate(widget.questionSpec, widget.stats, _question);
+      _question = _questionGenerator.generate(
+          widget.questionSpec, widget.stats, _question);
       _currentHasBeenWrong = false;
       _currentIsOnTheRightTrack = true;
 
@@ -191,7 +193,7 @@ class _GameState extends State<Game> {
 }
 
 class Game extends StatefulWidget {
-  Game({
+  const Game({
     super.key,
     required this.questionSpec,
     required duration,
@@ -200,8 +202,6 @@ class Game extends StatefulWidget {
     required this.onQuestionAnswered,
     required this.onDone,
   }) : duration = kDebugMode ? const Duration(seconds: 10) : duration;
-
-  final QuestionGenerator _questionGenerator = QuestionGenerator();
 
   final QuestionSpec questionSpec;
   final Duration duration;
