@@ -132,6 +132,50 @@ void main() {
     expect(candidates[question], const Duration(seconds: 23));
   });
 
+  // A lucky guess shouldn't make a question look easy when the other attempts
+  // were guesses as well
+  test("Today's hardest question is the one needing the most practice", () {
+    LongTermStats base = LongTermStats();
+
+    // 3s per correct answer
+    Question known = Question(2, Operation.multiplication, 3, 6);
+    _addAnswers(base, known, const Duration(seconds: 3), true, 3);
+
+    // (1s + 2s + 2s) / 1 correct answer = 5s per correct answer
+    Question guessed = Question(4, Operation.division, 5, 5);
+    _addAnswers(base, guessed, const Duration(seconds: 1), true, 1);
+    _addAnswers(base, guessed, const Duration(seconds: 2), false, 2);
+
+    HardestQuestion hardest = base.getTodaysHardestQuestion()!;
+    expect(hardest.question, guessed);
+    expect(hardest.bestDuration, const Duration(seconds: 1));
+  });
+
+  // Something you got wrong wasn't really answered, no matter how quickly
+  test("Today's hardest best time only counts first-attempt correct answers",
+      () {
+    LongTermStats base = LongTermStats();
+
+    Question question = Question(2, Operation.multiplication, 3, 6);
+    _addAnswers(base, question, const Duration(seconds: 1), false, 1);
+    _addAnswers(base, question, const Duration(seconds: 4), true, 1);
+
+    HardestQuestion hardest = base.getTodaysHardestQuestion()!;
+    expect(hardest.bestDuration, const Duration(seconds: 4));
+  });
+
+  test("Today's hardest has no best time if never right on the first attempt",
+      () {
+    LongTermStats base = LongTermStats();
+
+    Question question = Question(2, Operation.multiplication, 3, 6);
+    _addAnswers(base, question, const Duration(seconds: 1), false, 2);
+
+    HardestQuestion hardest = base.getTodaysHardestQuestion()!;
+    expect(hardest.question, question);
+    expect(hardest.bestDuration, isNull);
+  });
+
   // Stats from before we recorded correctness should count as correct
   test("Top List counts old stats as correct", () {
     String json = '{"assignments": ['
