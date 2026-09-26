@@ -100,6 +100,52 @@ void main() {
     expect(_topListDuration(topList, "2×3=6"), const Duration(seconds: 8));
   });
 
+  // Once you have learned a question, the top list should show that soon, even
+  // if you used to be slow at it
+  test("Top List only counts the last three answers to each question", () {
+    LongTermStats base = LongTermStats();
+
+    Question question = Question(2, Operation.multiplication, 3, 6);
+    _addAnswers(base, question, const Duration(seconds: 10), true, 5);
+    _addAnswers(base, question, const Duration(seconds: 3), true, 3);
+
+    var topList = base.getTopList("multiplication", "division");
+    expect(_topListDuration(topList, "2×3=6"), const Duration(seconds: 3));
+  });
+
+  // Once you have learned a table, the top list should show that soon, even if
+  // you used to be slow at it
+  test("Top List tables only count the last three answers to each question",
+      () {
+    LongTermStats base = LongTermStats();
+
+    Question learned = Question(2, Operation.multiplication, 3, 6);
+    _addAnswers(base, learned, const Duration(seconds: 10), true, 5);
+    _addAnswers(base, learned, const Duration(seconds: 3), true, 3);
+
+    Question known = Question(2, Operation.multiplication, 4, 8);
+    _addAnswers(base, known, const Duration(seconds: 3), true, 3);
+
+    var topList = base.getTopList("multiplication", "division");
+    expect(_topListDuration(topList, "2"), const Duration(seconds: 3));
+  });
+
+  // A table is as hard as its questions, no matter how often each of them was
+  // asked
+  test("Top List tables count each question equally", () {
+    LongTermStats base = LongTermStats();
+
+    Question oftenAsked = Question(2, Operation.multiplication, 3, 6);
+    _addAnswers(base, oftenAsked, const Duration(seconds: 2), true, 10);
+
+    Question rarelyAsked = Question(2, Operation.multiplication, 4, 8);
+    _addAnswers(base, rarelyAsked, const Duration(seconds: 8), true, 3);
+
+    // (3 * 2s + 3 * 8s) / 6 correct answers = 5s
+    var topList = base.getTopList("multiplication", "division");
+    expect(_topListDuration(topList, "2"), const Duration(seconds: 5));
+  });
+
   // Questions that were guessed at should come up for practice more often than
   // questions that were answered correctly
   test("Focus candidates count time per first-attempt correct answer", () {
