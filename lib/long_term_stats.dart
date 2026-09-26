@@ -21,6 +21,15 @@ class TopListEntry {
   TopListEntry(this.name, this.duration);
 }
 
+class HardestQuestion {
+  final Question question;
+
+  /// The fastest first-attempt correct answer, null if there were none
+  final Duration? bestDuration;
+
+  HardestQuestion(this.question, this.bestDuration);
+}
+
 @visibleForTesting
 class StatsEntry {
   final Question question;
@@ -299,10 +308,11 @@ class LongTermStats {
         totalDuration.inMinutes, rounds, totalDuration.inSeconds % 60);
   }
 
-  /// "Today's hardest question was 3x4=12, which took you 5.3s at best."
+  /// The question answered today that needs the most practice, with the
+  /// fastest time it was answered correctly on the first attempt.
   ///
   /// If there are no assignments today, return null.
-  String? getTodaysHardest(BuildContext context) {
+  HardestQuestion? getTodaysHardestQuestion() {
     final assignments = _assignmentsToday();
     if (assignments.isEmpty) {
       return null;
@@ -321,6 +331,18 @@ class LongTermStats {
     final hardest =
         fastestTime.entries.reduce((a, b) => a.value > b.value ? a : b);
 
+    return HardestQuestion(hardest.key, hardest.value);
+  }
+
+  /// "Today's hardest question was 3x4=12, which took you 5.3s at best."
+  ///
+  /// If there are no assignments today, return null.
+  String? getTodaysHardest(BuildContext context) {
+    final hardest = getTodaysHardestQuestion();
+    if (hardest == null) {
+      return null;
+    }
+
     // Note that we need to explicitly pass the locale to NumberFormat,
     // otherwise we get "." decimal separators even in Swedish.
     final NumberFormat oneDecimal =
@@ -328,8 +350,8 @@ class LongTermStats {
 
     // "Today's hardest question was 3x4=12, which took you 5.3s at best."
     return AppLocalizations.of(context)!.todays_hardest(
-        hardest.key.getQuestionText() + hardest.key.answer.toString(),
-        oneDecimal.format(hardest.value.inMilliseconds / 1000.0));
+        hardest.question.getQuestionText() + hardest.question.answer.toString(),
+        oneDecimal.format(hardest.bestDuration!.inMilliseconds / 1000.0));
   }
 
   String getStreak(BuildContext context) {
