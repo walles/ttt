@@ -12,6 +12,17 @@ Run tests this way. `flutter pub get` is there to regenerate localization:
 flutter pub get && flutter analyze && flutter test
 ```
 
+To serve the current sources on your local network so you can test on your
+phone:
+
+```bash
+flutter run -d web-server --release --web-hostname 0.0.0.0 --web-port 8000 --dart-define=GIT_SHA=$(git rev-parse HEAD)
+```
+
+When it says "is being served", go to `http://<IP>:8000` on your phone, where
+`<IP>` is what `ipconfig getifaddr en0` prints. If you get an old version,
+reload the page.
+
 ## TODO
 
 ### Random improvements
