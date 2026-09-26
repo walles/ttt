@@ -186,6 +186,15 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     return _toSpacedColumn(children);
   }
 
+  /// "3.2s", or "–" if there were no correct answers to time
+  String _formatTopListDuration(Duration? duration, NumberFormat oneDecimal) {
+    if (duration == null) {
+      return "–";
+    }
+
+    return "${oneDecimal.format(duration.inMilliseconds / 1000.0)}s";
+  }
+
   List<Widget> _topListWidgets() {
     List<TopListEntry> topList = _longTermStats.getTopList(
         AppLocalizations.of(context)!.multiplication,
@@ -221,8 +230,7 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
               ),
               Container(
                 alignment: Alignment.centerRight,
-                child: Text(
-                    "${oneDecimal.format(entry.duration.inMilliseconds / 1000.0)}s"),
+                child: Text(_formatTopListDuration(entry.duration, oneDecimal)),
               ),
             ],
           );

@@ -9,10 +9,14 @@ import 'package:ttt/streak.dart';
 const _maxStatEntries = 150;
 const _maxTopListLength = 10;
 
+// Answers slower than this probably mean the player was doing something else
+const _maxCountedDuration = Duration(seconds: 20);
+
 class TopListEntry {
   final String name;
 
-  final Duration duration;
+  /// Time spent per first-attempt correct answer, null if there were none
+  final Duration? duration;
 
   TopListEntry(this.name, this.duration);
 }
@@ -77,22 +81,58 @@ class LongTermStats {
 
   int get length => _assignments.length;
 
-  static _median(List<Duration> durations) {
-    if (durations.isEmpty) {
-      throw ArgumentError("Cannot calculate median of empty list");
+  /// Total time spent on these assignments, with each one capped at
+  /// `_maxCountedDuration`.
+  static Duration _cappedTotalDuration(List<StatsEntry> assignments) {
+    var total = Duration.zero;
+    for (final assignment in assignments) {
+      if (assignment.duration > _maxCountedDuration) {
+        total += _maxCountedDuration;
+        continue;
+      }
+
+      total += assignment.duration;
     }
 
-    final sorted = List<Duration>.from(durations)..sort();
-    if (sorted.length.isOdd) {
-      return sorted[(sorted.length - 1) ~/ 2];
+    return total;
+  }
+
+  /// Time spent per first-attempt correct answer, with each assignment's time
+  /// capped at `_maxCountedDuration`.
+  ///
+  /// Wrong answers add time but no correct answers, so guessing until you get
+  /// it right scores worse than thinking first.
+  ///
+  /// Returns null if none of the assignments were correct on the first
+  /// attempt.
+  static Duration? _durationPerCorrectAnswer(List<StatsEntry> assignments) {
+    var correctCount = 0;
+    for (final assignment in assignments) {
+      // Old stats don't know, give them the benefit of the doubt
+      if (assignment.correct ?? true) {
+        correctCount++;
+      }
     }
 
-    final beforeMidpoint = sorted.length ~/ 2 - 1;
-    final afterMidpoint = sorted.length ~/ 2;
-    final averageMs = (sorted[beforeMidpoint].inMilliseconds +
-            sorted[afterMidpoint].inMilliseconds) /
-        2;
-    return Duration(milliseconds: averageMs.round());
+    if (correctCount == 0) {
+      return null;
+    }
+
+    return _cappedTotalDuration(assignments) ~/ correctCount;
+  }
+
+  /// How much practice these assignments show a need for. Longer means more.
+  ///
+  /// This is the time spent per first-attempt correct answer. If none were
+  /// correct, the assignments are timed as if the next answer will be correct,
+  /// but slow.
+  static Duration _practiceNeed(List<StatsEntry> assignments) {
+    final durationPerCorrectAnswer = _durationPerCorrectAnswer(assignments);
+    if (durationPerCorrectAnswer == null) {
+      return _cappedTotalDuration(assignments) + _maxCountedDuration;
+    }
+
+    return durationPerCorrectAnswer;
   }
 
   void add(Question question, Duration duration, bool correct,
@@ -122,8 +162,9 @@ class LongTermStats {
 
   /// A top list of at most `_maxTopListLength` entries.
   ///
-  /// The duration of each entry is the median of the durations of the
-  /// assignments in that category.
+  /// The duration of each entry is the time spent per first-attempt correct
+  /// answer in that category, with each answer's time capped. It is null if no
+  /// answer in the category was correct on the first attempt.
   ///
   /// The name can be a number 2-10. If either a or b is 4, then that counts
   /// towards the top list entry for "4".
@@ -131,55 +172,62 @@ class LongTermStats {
   /// The name can also be "Multiplication" or "Division" (localized). If we
   /// have data for both we show both, otherwise neither.
   ///
-  /// The list is sorted by duration, longest (needs most practice) first.
+  /// The list is sorted by need for practice, most first. This is the same
+  /// ranking `getFocusCandidates` uses. Where durations are known, longer ones
+  /// come first.
   ///
   /// To be in the list, a category must have at least three members.
   List<TopListEntry> getTopList(String multiplication, String division) {
-    final Map<String, List<Duration>> durations = {};
+    final Map<String, List<StatsEntry>> categories = {};
 
     for (final assignment in _assignments) {
-      durations
+      categories
           .putIfAbsent(assignment.question.a.toString(), () => [])
-          .add(assignment.duration);
+          .add(assignment);
       if (assignment.question.b != assignment.question.a) {
-        durations
+        categories
             .putIfAbsent(assignment.question.b.toString(), () => [])
-            .add(assignment.duration);
+            .add(assignment);
       }
 
       final qna = assignment.question.getQuestionText() +
           assignment.question.answer.toString();
-      durations.putIfAbsent(qna, () => []).add(assignment.duration);
+      categories.putIfAbsent(qna, () => []).add(assignment);
 
       final opName = assignment.question.operation == Operation.multiplication
           ? multiplication
           : division;
-      durations.putIfAbsent(opName, () => []).add(assignment.duration);
+      categories.putIfAbsent(opName, () => []).add(assignment);
     }
 
     // Drop any entries with fewer than three entries
-    durations.removeWhere((key, value) => value.length < 3);
+    categories.removeWhere((key, value) => value.length < 3);
 
     // Ensure either both or neither of multiplication and division are in the
     // list.
-    if (durations.containsKey(multiplication) !=
-        durations.containsKey(division)) {
-      durations.remove(multiplication);
-      durations.remove(division);
+    if (categories.containsKey(multiplication) !=
+        categories.containsKey(division)) {
+      categories.remove(multiplication);
+      categories.remove(division);
     }
 
-    // Calculate the median duration for each category
+    final Map<String, Duration> practiceNeeds = {};
+    for (final entry in categories.entries) {
+      practiceNeeds[entry.key] = _practiceNeed(entry.value);
+    }
+
+    // Most practice needed first
+    final names = categories.keys.toList();
+    names.sort((a, b) => practiceNeeds[b]!.compareTo(practiceNeeds[a]!));
+
     final List<TopListEntry> topList = [];
-    for (final entry in durations.entries) {
-      final durations = entry.value;
-      topList.add(TopListEntry(entry.key, _median(durations)));
+    for (final name in names) {
+      topList.add(
+          TopListEntry(name, _durationPerCorrectAnswer(categories[name]!)));
     }
 
-    // Sort the list by duration, longest first
-    topList.sort((a, b) => b.duration.compareTo(a.duration));
-
-    // Limit to five entries, but multiplication and division should always be
-    // kept.
+    // Limit the number of entries, but multiplication and division should
+    // always be kept.
     while (topList.length > _maxTopListLength) {
       // Iterate from the end of the list to find a removal candidate
       for (var i = topList.length - 1; i >= 0; i--) {
@@ -196,24 +244,28 @@ class LongTermStats {
     return topList;
   }
 
-  /// Returns a map of questions to the median response time of that question.
+  /// Returns a map of the questions matching the spec to how much practice
+  /// each one needs. Longer means more.
+  ///
+  /// This is the time spent per first-attempt correct answer. Questions that
+  /// have never been answered correctly on the first attempt are timed as if
+  /// their next answer will be correct, but slow.
   Map<Question, Duration> getFocusCandidates(QuestionSpec spec) {
-    // Collect all durations for all questions matching the spec
-    final Map<Question, List<Duration>> durationsPerQuestion = {};
+    // Collect all assignments for all questions matching the spec
+    final Map<Question, List<StatsEntry>> assignmentsPerQuestion = {};
     for (final assignment in _assignments) {
       if (!spec.matches(assignment.question)) {
         continue;
       }
 
-      durationsPerQuestion
+      assignmentsPerQuestion
           .putIfAbsent(assignment.question, () => [])
-          .add(assignment.duration);
+          .add(assignment);
     }
 
     final Map<Question, Duration> focusCandidates = {};
-    for (final entry in durationsPerQuestion.entries) {
-      final durations = entry.value;
-      focusCandidates[entry.key] = _median(durations);
+    for (final entry in assignmentsPerQuestion.entries) {
+      focusCandidates[entry.key] = _practiceNeed(entry.value);
     }
 
     return focusCandidates;
