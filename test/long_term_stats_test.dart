@@ -132,6 +132,19 @@ void main() {
     expect(candidates[question], const Duration(seconds: 23));
   });
 
+  // Once you have learned a question, it should stop coming up for practice
+  // soon, even if you used to be slow at it
+  test("Focus candidates only count the last three answers", () {
+    LongTermStats base = LongTermStats();
+
+    Question question = Question(2, Operation.multiplication, 3, 6);
+    _addAnswers(base, question, const Duration(seconds: 10), true, 5);
+    _addAnswers(base, question, const Duration(seconds: 3), true, 3);
+
+    var candidates = base.getFocusCandidates(QuestionSpec({2}, true, false));
+    expect(candidates[question], const Duration(seconds: 3));
+  });
+
   // A lucky guess shouldn't make a question look easy when the other attempts
   // were guesses as well
   test("Today's hardest question is the one needing the most practice", () {
