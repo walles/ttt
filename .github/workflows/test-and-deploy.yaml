@@ -27,6 +27,9 @@ jobs:
           # Sends the deploy to walles/ttt rather than just walles
           baseHref: /ttt/
 
+          # Makes the help dialog link to the deployed source code
+          customArgs: --dart-define=GIT_SHA=${{ github.sha }}
+
       # On other branches, just verify that building works
       - run: flutter build web --release
         if: github.ref != 'refs/heads/main'
