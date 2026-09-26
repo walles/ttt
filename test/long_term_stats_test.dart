@@ -10,7 +10,7 @@ void main() {
   test("Top List generation", () {
     LongTermStats base = LongTermStats();
 
-    Question question = QuestionSpec({2}, true, false).generate(null);
+    Question question = Question(2, Operation.multiplication, 3, 6);
     base.add(question, const Duration(seconds: 1), true, DateTime.now(),
         DateTime.now());
     base.add(question, const Duration(seconds: 2), true, DateTime.now(),
@@ -18,12 +18,10 @@ void main() {
     base.add(question, const Duration(seconds: 3), true, DateTime.now(),
         DateTime.now());
 
-    // For 2x2 we'd get one top list entry for 2. With  2x5 we'd get another one
-    // for 5 as well. And in either case, we'll get one entry for the full
-    // question. So either two or three entries are fine.
+    // One entry each for 2, for 3 and for the full question. Multiplication
+    // has no entry, since there is no division to compare it with.
     var topList = base.getTopList("multiplication", "division");
-    expect(topList.length >= 2, true);
-    expect(topList.length <= 3, true);
+    expect(topList.length, 3);
     for (var entry in topList) {
       expect(entry.duration, const Duration(seconds: 2));
     }
@@ -205,7 +203,7 @@ void main() {
   test("JSON (de)serialization", () {
     LongTermStats base = LongTermStats();
 
-    Question question = QuestionSpec({2}, true, false).generate(null);
+    Question question = Question(2, Operation.multiplication, 3, 6);
     base.add(question, const Duration(seconds: 1), true, DateTime.now(),
         DateTime.now());
     base.add(question, const Duration(seconds: 2), false, DateTime.now(),
