@@ -6,7 +6,9 @@ import 'package:ttt/l10n/app_localizations.dart';
 import 'package:ttt/question_spec.dart';
 import 'package:ttt/streak.dart';
 
-const _maxStatEntries = 150;
+// Enough to remember when each of the 162 questions was last asked, even with
+// focus questions repeating
+const _maxStatEntries = 400;
 const _maxTopListLength = 10;
 
 // Answers slower than this probably mean the player was doing something else
