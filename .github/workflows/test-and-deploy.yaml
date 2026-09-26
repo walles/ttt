@@ -26,3 +26,7 @@ jobs:
         with:
           # Sends the deploy to walles/ttt rather than just walles
           baseHref: /ttt/
+
+      # On other branches, just verify that building works
+      - run: flutter build web --release
+        if: github.ref != 'refs/heads/main'
