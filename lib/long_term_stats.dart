@@ -290,6 +290,35 @@ class LongTermStats {
     return focusCandidates;
   }
 
+  /// Returns these questions sorted by when they were last asked, least
+  /// recently asked first.
+  ///
+  /// Questions not in the stats, because they were never asked or were asked
+  /// too long ago to be remembered, come first, in the order given.
+  List<Question> sortedByLastAsked(List<Question> questions) {
+    // Later answers overwrite earlier ones, so this ends up with the index of
+    // the latest answer to each question
+    final Map<Question, int> lastAskedIndex = {};
+    for (var i = 0; i < _assignments.length; i++) {
+      lastAskedIndex[_assignments[i].question] = i;
+    }
+
+    final List<Question> neverAsked = [];
+    final List<Question> asked = [];
+    for (final question in questions) {
+      if (lastAskedIndex.containsKey(question)) {
+        asked.add(question);
+        continue;
+      }
+
+      neverAsked.add(question);
+    }
+
+    // Each asked question has an index of its own, so there are no ties
+    asked.sort((a, b) => lastAskedIndex[a]!.compareTo(lastAskedIndex[b]!));
+    return neverAsked + asked;
+  }
+
   List<StatsEntry> _assignmentsToday() {
     final today = DateTime.now();
     return _assignments

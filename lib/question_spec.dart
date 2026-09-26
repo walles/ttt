@@ -47,6 +47,11 @@ class QuestionSpec {
     return true;
   }
 
+  /// All questions matching this spec
+  List<Question> allMatching() {
+    return _allPossibleQuestions().where((q) => matches(q)).toList();
+  }
+
   Question generate(Question? notThisOne) {
     final candidates =
         _allPossibleQuestions().where((q) => matches(q)).toList();
