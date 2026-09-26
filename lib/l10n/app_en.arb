@@ -8,6 +8,7 @@
     "done_stats": "You got {rightOnFirstAttempt} correct answers in {totalSeconds} seconds at {perQuestionSeconds} seconds per answer.",
     "today_stats": "Today you spent {minutes}m{seconds}s on {assignmentsTodayCount} assignments over {rounds} rounds.",
     "todays_hardest": "Today's hardest question was {question_with_answer}. At best it took you {seconds}s.",
+    "todays_hardest_never_right": "Today's hardest question was {question_with_answer}. Try getting it right on the first attempt!",
     "streak_play_to_start_a_new_one": "Play today to start a new daily streak!",
     "streak_play_today_to_extend": "{n} day streak, play today to make it a {n_plus_1} day streak!",
     "streak_you_have_an_n_day_streak": "You have a {n} day streak!",

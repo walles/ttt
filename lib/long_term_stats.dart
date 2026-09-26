@@ -21,6 +21,15 @@ class TopListEntry {
   TopListEntry(this.name, this.duration);
 }
 
+class HardestQuestion {
+  final Question question;
+
+  /// The fastest first-attempt correct answer, null if there were none
+  final Duration? bestDuration;
+
+  HardestQuestion(this.question, this.bestDuration);
+}
+
 @visibleForTesting
 class StatsEntry {
   final Question question;
@@ -299,37 +308,86 @@ class LongTermStats {
         totalDuration.inMinutes, rounds, totalDuration.inSeconds % 60);
   }
 
-  /// "Today's hardest question was 3x4=12, which took you 5.3s at best."
+  /// The question answered today that needs the most practice, with the
+  /// fastest time it was answered correctly on the first attempt.
   ///
   /// If there are no assignments today, return null.
-  String? getTodaysHardest(BuildContext context) {
+  HardestQuestion? getTodaysHardestQuestion() {
     final assignments = _assignmentsToday();
     if (assignments.isEmpty) {
       return null;
     }
 
-    // Figure out the fastest time for each assignment
-    final fastestTime = <Question, Duration>{};
+    final Map<Question, List<StatsEntry>> assignmentsPerQuestion = {};
     for (final assignment in assignments) {
-      final current = fastestTime[assignment.question];
-      if (current == null || assignment.duration < current) {
-        fastestTime[assignment.question] = assignment.duration;
-      }
+      assignmentsPerQuestion
+          .putIfAbsent(assignment.question, () => [])
+          .add(assignment);
     }
 
-    // Find the hardest question
-    final hardest =
-        fastestTime.entries.reduce((a, b) => a.value > b.value ? a : b);
+    // Find the question needing the most practice
+    Question? hardest;
+    Duration? hardestPracticeNeed;
+    for (final entry in assignmentsPerQuestion.entries) {
+      final practiceNeed = _practiceNeed(entry.value);
+      if (hardestPracticeNeed != null && practiceNeed <= hardestPracticeNeed) {
+        continue;
+      }
+
+      hardest = entry.key;
+      hardestPracticeNeed = practiceNeed;
+    }
+
+    return HardestQuestion(
+        hardest!, _fastestCorrectDuration(assignmentsPerQuestion[hardest]!));
+  }
+
+  /// The fastest first-attempt correct answer, null if there were none
+  static Duration? _fastestCorrectDuration(List<StatsEntry> assignments) {
+    Duration? fastest;
+    for (final assignment in assignments) {
+      // Old stats don't know, give them the benefit of the doubt
+      if (!(assignment.correct ?? true)) {
+        continue;
+      }
+      if (fastest != null && assignment.duration >= fastest) {
+        continue;
+      }
+
+      fastest = assignment.duration;
+    }
+
+    return fastest;
+  }
+
+  /// "Today's hardest question was 3x4=12. At best it took you 5.3s."
+  ///
+  /// If there are no assignments today, return null.
+  String? getTodaysHardest(BuildContext context) {
+    final hardest = getTodaysHardestQuestion();
+    if (hardest == null) {
+      return null;
+    }
+
+    final questionWithAnswer =
+        hardest.question.getQuestionText() + hardest.question.answer.toString();
+
+    final bestDuration = hardest.bestDuration;
+    if (bestDuration == null) {
+      // "Today's hardest question was 3x4=12. Try getting it right on the first
+      // attempt!"
+      return AppLocalizations.of(context)!
+          .todays_hardest_never_right(questionWithAnswer);
+    }
 
     // Note that we need to explicitly pass the locale to NumberFormat,
     // otherwise we get "." decimal separators even in Swedish.
     final NumberFormat oneDecimal =
         NumberFormat('#0.0', Localizations.localeOf(context).toString());
 
-    // "Today's hardest question was 3x4=12, which took you 5.3s at best."
-    return AppLocalizations.of(context)!.todays_hardest(
-        hardest.key.getQuestionText() + hardest.key.answer.toString(),
-        oneDecimal.format(hardest.value.inMilliseconds / 1000.0));
+    // "Today's hardest question was 3x4=12. At best it took you 5.3s."
+    return AppLocalizations.of(context)!.todays_hardest(questionWithAnswer,
+        oneDecimal.format(bestDuration.inMilliseconds / 1000.0));
   }
 
   String getStreak(BuildContext context) {
