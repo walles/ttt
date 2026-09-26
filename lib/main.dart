@@ -15,6 +15,7 @@ import 'package:ttt/game_config_widget.dart';
 import 'package:ttt/l10n/app_localizations.dart';
 
 const longTermStatsKey = "longTermStats";
+const soundEnabledKey = "soundEnabled";
 
 void main() async {
   await GetStorage.init();
@@ -96,6 +97,8 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
     } else {
       _longTermStats = LongTermStats();
     }
+
+    _effectsPlayer.enabled = GetStorage().read<bool>(soundEnabledKey) ?? true;
   }
 
   @override
@@ -329,6 +332,18 @@ class _TttHomeScreenState extends State<TttHomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
         actions: [
+          IconButton(
+            isSelected: _effectsPlayer.enabled,
+            icon: const Icon(Icons.volume_off),
+            selectedIcon: const Icon(Icons.volume_up),
+            tooltip: AppLocalizations.of(context)!.sound,
+            onPressed: () {
+              setState(() {
+                _effectsPlayer.enabled = !_effectsPlayer.enabled;
+              });
+              GetStorage().write(soundEnabledKey, _effectsPlayer.enabled);
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.help),
             onPressed: () {

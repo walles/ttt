@@ -3,6 +3,9 @@ import 'package:just_audio/just_audio.dart';
 class EffectsPlayer {
   final AudioPlayer _dingPlayer;
 
+  /// When false, playing effects does nothing.
+  bool enabled = true;
+
   /// Don't forget to call [dispose] when you're done with this object.
   EffectsPlayer() : _dingPlayer = AudioPlayer() {
     _dingPlayer.setAsset('assets/ding.mp3');
@@ -17,6 +20,10 @@ class EffectsPlayer {
   }
 
   Future<void> _play(AudioPlayer player) async {
+    if (!enabled) {
+      return;
+    }
+
     if (![
       ProcessingState.ready,
       ProcessingState.completed,
