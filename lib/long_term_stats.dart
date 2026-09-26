@@ -14,9 +14,9 @@ const _maxTopListLength = 10;
 // Answers slower than this probably mean the player was doing something else
 const _maxCountedDuration = Duration(seconds: 20);
 
-// Picking practice questions only looks at this many of the latest answers to
-// each question, so that learning something shows quickly
-const _focusAnswerCount = 3;
+// The top list and picking practice questions only look at this many of the
+// latest answers to each question, so that learning something shows quickly
+const _countedAnswersPerQuestion = 3;
 
 class TopListEntry {
   final String name;
@@ -179,7 +179,8 @@ class LongTermStats {
   ///
   /// The duration of each entry is the time spent per first-attempt correct
   /// answer in that category, with each answer's time capped. It is null if no
-  /// answer in the category was correct on the first attempt.
+  /// answer in the category was correct on the first attempt. Only the latest
+  /// `_countedAnswersPerQuestion` answers to each question count.
   ///
   /// The name can be a number 2-10. If either a or b is 4, then that counts
   /// towards the top list entry for "4".
@@ -193,9 +194,13 @@ class LongTermStats {
   ///
   /// To be in the list, a category must have at least three members.
   List<TopListEntry> getTopList(String multiplication, String division) {
-    final Map<String, List<StatsEntry>> categories = {};
+    final List<StatsEntry> counted = [];
+    for (final latest in _latestAnswersPerQuestion().values) {
+      counted.addAll(latest);
+    }
 
-    for (final assignment in _assignments) {
+    final Map<String, List<StatsEntry>> categories = {};
+    for (final assignment in counted) {
       categories
           .putIfAbsent(assignment.question.a.toString(), () => [])
           .add(assignment);
@@ -263,33 +268,41 @@ class LongTermStats {
   /// each one needs. Longer means more.
   ///
   /// This is the time spent per first-attempt correct answer, over the latest
-  /// `_focusAnswerCount` answers to each question. Questions without any
-  /// first-attempt correct answers among those are timed as if their next
+  /// `_countedAnswersPerQuestion` answers to each question. Questions without
+  /// any first-attempt correct answers among those are timed as if their next
   /// answer will be correct, but slow.
   Map<Question, Duration> getFocusCandidates(QuestionSpec spec) {
-    // Collect all assignments for all questions matching the spec
-    final Map<Question, List<StatsEntry>> assignmentsPerQuestion = {};
-    for (final assignment in _assignments) {
-      if (!spec.matches(assignment.question)) {
+    final Map<Question, Duration> focusCandidates = {};
+    for (final entry in _latestAnswersPerQuestion().entries) {
+      if (!spec.matches(entry.key)) {
         continue;
       }
 
-      assignmentsPerQuestion
+      focusCandidates[entry.key] = _practiceNeed(entry.value);
+    }
+
+    return focusCandidates;
+  }
+
+  /// The latest `_countedAnswersPerQuestion` answers to each question in the
+  /// stats, oldest first.
+  Map<Question, List<StatsEntry>> _latestAnswersPerQuestion() {
+    final Map<Question, List<StatsEntry>> answersPerQuestion = {};
+    for (final assignment in _assignments) {
+      answersPerQuestion
           .putIfAbsent(assignment.question, () => [])
           .add(assignment);
     }
 
-    final Map<Question, Duration> focusCandidates = {};
-    for (final entry in assignmentsPerQuestion.entries) {
-      var latest = entry.value;
-      if (latest.length > _focusAnswerCount) {
-        latest = latest.sublist(latest.length - _focusAnswerCount);
+    for (final answers in answersPerQuestion.values) {
+      if (answers.length <= _countedAnswersPerQuestion) {
+        continue;
       }
 
-      focusCandidates[entry.key] = _practiceNeed(latest);
+      answers.removeRange(0, answers.length - _countedAnswersPerQuestion);
     }
 
-    return focusCandidates;
+    return answersPerQuestion;
   }
 
   /// Returns these questions sorted by when they were last asked, least
