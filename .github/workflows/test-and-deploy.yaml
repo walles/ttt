@@ -11,9 +11,12 @@ jobs:
         with:
           flutter-version: '3.35.3'
           channel: 'stable'
-      - run: dart format --output=none --set-exit-if-changed lib/ test/
-      # Generates lib/l10n/app_localizations*.dart, needed by the analyzer
+
+      # Needed first: generates lib/l10n/app_localizations*.dart for the
+      # analyzer, and tells the formatter our language version
       - run: flutter pub get
+
+      - run: dart format --output=none --set-exit-if-changed lib/ test/
       - run: flutter analyze
       - run: flutter test
 
