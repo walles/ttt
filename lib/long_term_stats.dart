@@ -12,6 +12,10 @@ const _maxTopListLength = 10;
 // Answers slower than this probably mean the player was doing something else
 const _maxCountedDuration = Duration(seconds: 20);
 
+// Picking practice questions only looks at this many of the latest answers to
+// each question, so that learning something shows quickly
+const _focusAnswerCount = 3;
+
 class TopListEntry {
   final String name;
 
@@ -256,9 +260,10 @@ class LongTermStats {
   /// Returns a map of the questions matching the spec to how much practice
   /// each one needs. Longer means more.
   ///
-  /// This is the time spent per first-attempt correct answer. Questions that
-  /// have never been answered correctly on the first attempt are timed as if
-  /// their next answer will be correct, but slow.
+  /// This is the time spent per first-attempt correct answer, over the latest
+  /// `_focusAnswerCount` answers to each question. Questions without any
+  /// first-attempt correct answers among those are timed as if their next
+  /// answer will be correct, but slow.
   Map<Question, Duration> getFocusCandidates(QuestionSpec spec) {
     // Collect all assignments for all questions matching the spec
     final Map<Question, List<StatsEntry>> assignmentsPerQuestion = {};
@@ -274,7 +279,12 @@ class LongTermStats {
 
     final Map<Question, Duration> focusCandidates = {};
     for (final entry in assignmentsPerQuestion.entries) {
-      focusCandidates[entry.key] = _practiceNeed(entry.value);
+      var latest = entry.value;
+      if (latest.length > _focusAnswerCount) {
+        latest = latest.sublist(latest.length - _focusAnswerCount);
+      }
+
+      focusCandidates[entry.key] = _practiceNeed(latest);
     }
 
     return focusCandidates;
