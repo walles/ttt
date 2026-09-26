@@ -104,6 +104,9 @@ class _GameState extends State<Game> {
       _tooSlowTimer = Timer(_hintDelay, () {
         setState(() {
           _tooSlow = true;
+
+          // Copying the hint doesn't show that you know the answer
+          _currentHasBeenWrong = true;
         });
       });
 
