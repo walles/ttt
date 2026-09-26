@@ -12,7 +12,7 @@ import 'package:ttt/question_spec.dart';
 import 'package:ttt/stats.dart';
 import 'package:ttt/game_config_widget.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ttt/l10n/app_localizations.dart';
 
 const longTermStatsKey = "longTermStats";
 

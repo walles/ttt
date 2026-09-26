@@ -4,6 +4,14 @@ Hone your multiplication skills!
 
 Try here: <https://walles.github.io/ttt>
 
+## Development
+
+Run tests this way. `flutter pub get` is there to regenerate localization:
+
+```bash
+flutter pub get && flutter analyze && flutter test
+```
+
 ## TODO
 
 ### Random improvements

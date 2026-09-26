@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ttt/question.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ttt/l10n/app_localizations.dart';
 import 'package:ttt/question_spec.dart';
 import 'package:ttt/streak.dart';
 
