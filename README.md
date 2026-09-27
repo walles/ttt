@@ -33,13 +33,6 @@ reload the page.
     settings
   * Sort primarily by number of first-attempt correct answers, then by
     completion time
-* Keep a needs-practice list of assignments
-  * When the user fails something, give it three needs-practice points
-  * When the user passes something, deduct one needs-practice points
-  * Try to take every other question from the needs-practice table if there's
-    something in there
-  * For each possible question, keep track of how long it took the user to
-    answer it the last time they got it right
 
 ### Done
 
@@ -78,3 +71,6 @@ reload the page.
 * Add a sound effect
 * Collect stats on the last 50 questions
 * Present stats on the home screen, based on `LongTermStats.getTopList()`
+* Pick every 4th question on average for practice, based on the latest three
+  answers to each question
+* Deal the other questions so that all of them come up regularly
