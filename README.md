@@ -28,11 +28,6 @@ reload the page.
 ### Random improvements
 
 * Make an icon
-* Collect high scores
-  * Individual high score tables based on tables / multiplication / division
-    settings
-  * Sort primarily by number of first-attempt correct answers, then by
-    completion time
 
 ### Done
 
